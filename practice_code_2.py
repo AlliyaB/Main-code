@@ -14,9 +14,25 @@ class MainWindow:
         
          # Display label.
         program_title = tk.Label(master,
-            text = "NZ Road safety Education",
-            font = ("Helvetica", 18))
-        program_title.place(x = 200, y = 250)
+            text = "KiwiDrive",
+            font = ("Helvetica", 100, "bold"),
+            fg = "gold")
+        program_title.place(x = 100, y = 200)
+
+        # Create canvas to design dots for aesthetics.
+        red_canvas = tk.Canvas(master, width=50, height=50)
+        red_canvas.place(x = 193, y=202)
+
+        gold_canvas = tk.Canvas(master, width=50, height=50)
+        gold_canvas.place(x = 335, y=202)
+
+        green_canvas = tk.Canvas(master, width=50, height=50)
+        green_canvas.place(x = 522, y=202)
+
+        # Draw coloured dots that is a filled circle.
+        red_canvas.create_oval(15, 15, 35, 35, fill='red', outline='')
+        gold_canvas.create_oval(15, 15, 35, 35, fill='goldenrod1', outline='')
+        green_canvas.create_oval(15, 15, 35, 35, fill='green', outline='')
 
         # Create a coloured box for the top where navigation bar will be.
         canvas = Canvas(master,
@@ -27,9 +43,9 @@ class MainWindow:
 
         # Create Sign up, log in, and exit buttons.
         login_btn = tk.Button(master, text = "Log in", width=11, height=2,
-                             font=("Helvetica", 10, "bold"))
+                             font=("Helvetica", 10, "bold"), command = self.open_login_window)
         signup_btn = tk.Button(master, text = "Sign up", width=11, height=2,
-                             font=("Helvetica", 10, "bold"))
+                             font=("Helvetica", 10, "bold"), command = self.open_signup_window)
         exit_btn = tk.Button(master, text = "Exit", width=11, height=2,
                              font=("Helvetica", 10, "bold"), command = self.checkexit)
         
@@ -42,6 +58,14 @@ class MainWindow:
         self.new_window = tk.Toplevel(self.master)
         NewWindow(self.new_window)
 
+    def open_login_window(self):
+        self.login_window = tk.Toplevel(self.master)
+        LoginWindow(self.login_window)
+
+    def open_signup_window(self):
+        self.signup_window = tk.Toplevel(self.master)
+        SignupWindow(self.signup_window)
+
     def checkexit(self):
         """Function to confirm user wants to exit application."""
         response = messagebox.askquestion("Exit Programme?","Your "
@@ -51,6 +75,40 @@ class MainWindow:
                                             icon = 'warning')
         if response == "yes":
             self.master.destroy()
+
+
+class LoginWindow:
+    def __init__(self, master):
+        self.master = master
+        master.title("Login Window")
+        master.geometry("300x350")
+        master.resizable(False, False)
+
+
+class SignupWindow:
+    def __init__(self, master):
+        self.master = master
+        master.title("Signup Window")
+        master.geometry("300x350")
+        master.resizable(False, False)
+
+        # Declaring name and password as string variables.
+        fields = ["First name", "Last name", "Username", "Password", "Confirm\nPassword"]
+        vars = {field: tk.StringVar() for field in fields}
+
+        # Create labels/buttons for title and user navigation.
+        tk.Label(master, text="Sign up:", font=("Helvetica", 15)).place(x=10, y=25)
+        tk.Label(master, text="Create an account", font=("Helvetica", 15)).place(x=70, y=80)
+        tk.Button(master, text = "Log in", width=11, height=2, font=("Helvetica", 10, "bold")).place(x=200, y=15)
+
+        # Loop for labels and entries
+        for i, field in enumerate(fields):
+            y = 120 + i * 40
+            tk.Label(master, text=field + ":", font=("Helvetica", 10, "bold")).place(x=20, y=y)
+            tk.Entry(master, textvariable=vars[field], show="*" if "Password" in field else "").place(x=100, y=y)
+
+        # Signup button
+        tk.Button(master, text="Sign up", width=7, height=1, fg="black", bg="gold").place(x=120, y=315)
 
 
 class NewWindow:
