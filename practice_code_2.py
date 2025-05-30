@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox 
+"""Creates and modifies images."""
+from PIL import ImageTk
 
 class MainWindow:
     def __init__(self, master):
@@ -8,25 +10,33 @@ class MainWindow:
         master.title("Main Window")
         master.geometry("1200x700")
         master.resizable(False, False)
+        master.configure(background="lemon chiffon")
 
         self.button = tk.Button(master, text="Open New Window", command=self.open_new_window)
         self.button.place(x=700, y=300)
         
-         # Display label.
+         # Display labels for title and substitle.
         program_title = tk.Label(master,
-            text = "KiwiDrive",
-            font = ("Helvetica", 100, "bold"),
-            fg = "gold")
-        program_title.place(x = 100, y = 200)
+                                 text="KiwiDrive",
+                                 font=("Helvetica", 100, "bold"),
+                                 fg="gold",
+                                 bg="lemon chiffon")
+        program_title.place(x=100, y=200)
+
+        sub_title = tk.Label(master, 
+                             text="Learn. Quiz. Test.", 
+                             font=("Helvetica", 20),
+                             bg="lemon chiffon")
+        sub_title.place(x=100, y=370)
 
         # Create canvas to design dots for aesthetics.
-        red_canvas = tk.Canvas(master, width=50, height=50)
+        red_canvas = tk.Canvas(master, width=50, height=50, bg="lemon chiffon")
         red_canvas.place(x = 193, y=202)
 
-        gold_canvas = tk.Canvas(master, width=50, height=50)
+        gold_canvas = tk.Canvas(master, width=50, height=50, bg="lemon chiffon")
         gold_canvas.place(x = 335, y=202)
 
-        green_canvas = tk.Canvas(master, width=50, height=50)
+        green_canvas = tk.Canvas(master, width=50, height=50, bg="lemon chiffon")
         green_canvas.place(x = 522, y=202)
 
         # Draw coloured dots that is a filled circle.
@@ -45,7 +55,7 @@ class MainWindow:
         login_btn = tk.Button(master, text = "Log in", width=11, height=2,
                              font=("Helvetica", 10, "bold"), command = self.open_login_window)
         signup_btn = tk.Button(master, text = "Sign up", width=11, height=2,
-                             font=("Helvetica", 10, "bold"), command = self.open_signup_window)
+                             font=("Helvetica", 10, "bold"), command = self.open_master)
         exit_btn = tk.Button(master, text = "Exit", width=11, height=2,
                              font=("Helvetica", 10, "bold"), command = self.checkexit)
         
@@ -62,9 +72,9 @@ class MainWindow:
         self.login_window = tk.Toplevel(self.master)
         LoginWindow(self.login_window)
 
-    def open_signup_window(self):
-        self.signup_window = tk.Toplevel(self.master)
-        SignupWindow(self.signup_window)
+    def open_master(self):
+        self.master = tk.Toplevel(self.master)
+        SignupWindow(self.master)
 
     def checkexit(self):
         """Function to confirm user wants to exit application."""
@@ -93,22 +103,71 @@ class SignupWindow:
         master.resizable(False, False)
 
         # Declaring name and password as string variables.
-        fields = ["First name", "Last name", "Username", "Password", "Confirm\nPassword"]
+        fields = ["First name", "Last name", "Username", "Password", "Confirm\nPassword", "Birthdate"]
         vars = {field: tk.StringVar() for field in fields}
+
+        # Declaring name and password as string variables.
+        first_name_var = tk.StringVar()
+        last_name_var = tk.StringVar()
+        username_var = tk.StringVar()
+        password_var = tk.StringVar()
+        confirm_password_var = tk.StringVar()
+
+        # Entrys.
+        first_name_entry = tk.Entry(master,
+                                    textvariable = first_name_var)
+        last_name_entry = tk.Entry(master,
+                                textvariable = last_name_var)
+        username_entry = tk.Entry(master,
+                                textvariable = username_var)
+        password_entry=tk.Entry(master,
+                                textvariable = password_var,
+                                show = "*")
+        confirm_password_entry=tk.Entry(master,
+                                        textvariable = confirm_password_var,
+                                        show = "*")
+        
+        first_name_entry.place(x = 100, y = 120)
+        last_name_entry.place(x = 100, y = 160)
+        username_entry.place(x = 100, y = 200)
+        password_entry.place(x = 100, y = 240)
+        confirm_password_entry.place(x = 100, y = 280)
 
         # Create labels/buttons for title and user navigation.
         tk.Label(master, text="Sign up:", font=("Helvetica", 15)).place(x=10, y=25)
-        tk.Label(master, text="Create an account", font=("Helvetica", 15)).place(x=70, y=80)
-        tk.Button(master, text = "Log in", width=11, height=2, font=("Helvetica", 10, "bold")).place(x=200, y=15)
+        tk.Label(master, text="Create an account", font=("Helvetica", 10)).place(x=82, y=30)
+        tk.Button(master, text = "Log in", width=11, height=2, font=("Helvetica", 10, "bold"), command = self.open_login_window).place(x=200, y=15)
 
         # Loop for labels and entries
         for i, field in enumerate(fields):
-            y = 120 + i * 40
+            y = 80 + i * 40
             tk.Label(master, text=field + ":", font=("Helvetica", 10, "bold")).place(x=20, y=y)
-            tk.Entry(master, textvariable=vars[field], show="*" if "Password" in field else "").place(x=100, y=y)
+            # tk.Entry(master, textvariable=vars[field], show="*" if "Password" in field else "").place(x=100, y=y)
 
         # Signup button
-        tk.Button(master, text="Sign up", width=7, height=1, fg="black", bg="gold").place(x=120, y=315)
+        tk.Button(master, text="Sign up", width=7, height=1, fg="black", bg="gold", command = self.signup).place(x=120, y=315)
+
+    def signup(self):
+        first_name = first_name_var.get()
+        last_name = last_name_var.get()
+        username = username_var.get()
+        password = password_var.get()
+        confirm_password = confirm_password_var.get()
+
+        print("First name: " + first_name)
+        print("Last name: " + last_name)
+        print("Username: " + username)
+        print("Password: " + password)
+        print("Confirm password: " + confirm_password)
+        
+
+    def open_login_window(self):
+        self.login_window = tk.Toplevel(self.master)
+        LoginWindow(self.login_window)
+
+        # Declaring username and password as string variables.
+        username_var = tk.StringVar()
+        password_var = tk.StringVar()
 
 
 class NewWindow:
