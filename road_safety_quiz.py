@@ -5,6 +5,7 @@ from tkinter import messagebox
 from PIL import ImageTk
 """Provides the python intepreter with image editing capabilities."""
 from PIL import Image
+import os
 
 class MainWindow:
     def __init__(self, master):
@@ -32,7 +33,7 @@ class MainWindow:
         sub_title.place(x=100, y=370)
 
         # Create image.
-        image = Image.open("road_image.png")
+        image = Image.open("edited_road_image.png")
         resize_image = image.resize((400, 400))
         img = ImageTk.PhotoImage(resize_image)
         road_image = tk.Label(image = img)
@@ -83,8 +84,8 @@ class MainWindow:
         LoginWindow(self.login_window)
 
     def open_signup_window(self):
-        self.signup_window = tk.Toplevel(self.master)
-        SignupWindow(self.signup_window)
+        self.open_signup_window = tk.Toplevel(self.master)
+        SignupWindow(self.open_signup_window)
 
     def checkexit(self):
         """Function to confirm user wants to exit application."""
@@ -107,42 +108,134 @@ class LoginWindow:
 
 class SignupWindow:
     def __init__(self, master):
+
+        def signup():
+            """Function to validate user input."""
+            first_name = first_name_var.get()
+            last_name = last_name_var.get()
+            username = username_var.get()
+            password = password_var.get()
+            confirm_password = confirm_password_var.get()
+
+            # Validate the user input if all fields are entered.
+            if first_name and last_name and username and password and \
+                confirm_password:
+                try:
+                    with open("existing_users.txt", "r") as file:
+                        usernames = file.read().splitlines()
+                except FileNotFoundError:
+                    usernames = []
+                if not username.isalpha() and not username.isnumeric():
+                    messagebox.showerror("Invalid username", "Please only " +
+                                        "enter numbers or letters for username.")
+                elif username in usernames:
+                    messagebox.showerror("Invalid username", "This username " +
+                                        "already exists.\nPlease enter a " +
+                                        "different username.")
+                elif os.path.exists(username):
+                    messagebox.showerror(text="Registration Unsuccessful: User already exists!", fg="red")
+                elif not first_name.isalpha() or not last_name.isalpha():
+                    messagebox.showerror("Invalid first name/last " +
+                                        "name", "Please only enter letters " +
+                                        "for first name and last name.")
+                elif password != confirm_password:
+                    messagebox.showerror("Invalid password", "Please check " +
+                                        "that your passwords match.")
+                else:
+                    with open(f"{username}_info.txt", "a") as file:
+                        file.write(f"Username: {username}\nFirst name: {first_name}\nLast name: {last_name}\nPassword: {password}")
+
+                    print("First name: " + first_name)
+                    print("Last name: " + last_name)
+                    print("Username: " + username)
+                    print("Password: " + password)
+                    print("Confirm password: " + confirm_password)
+                    first_name_var.set("")
+                    last_name_var.set("")
+                    username_var.set("")
+                    password_var.set("")
+                    confirm_password_var.set("")
+                    messagebox.showinfo("Successful", "Sign up successful." +
+                                        f"\nWelcome {username}")
+                    self.master.destroy()
+                    NewWindow(tk.Tk())
+                        
         self.master = master
         master.title("Signup Window")
         master.geometry("300x350")
         master.resizable(False, False)
 
-        # Declaring name and password as string variables.
-        fields = ["First name", "Last name", "Username", "Password", "Confirm\nPassword", "Birthdate"]
-        vars = {field: tk.StringVar() for field in fields}
-
+        # # Declaring name and password as string variables.
+        # fields = ["First name", "Last name", "Username", "Password", "Confirm\nPassword", "Birthdate"]
+        # vars = {field: tk.StringVar() for field in fields}
+        
         # Create labels/buttons for title and user navigation.
         tk.Label(master, text="Sign up:", font=("Helvetica", 15)).place(x=10, y=25)
         tk.Label(master, text="Create an account", font=("Helvetica", 10)).place(x=82, y=30)
         tk.Button(master, text = "Log in", width=11, height=2, font=("Helvetica", 10, "bold"), command = self.open_login_window).place(x=200, y=15)
 
-        # Loop for labels and entries
-        for i, field in enumerate(fields):
-            y = 80 + i * 40
-            tk.Label(master, text=field + ":", font=("Helvetica", 10, "bold")).place(x=20, y=y)
-            tk.Entry(master, textvariable=vars[field], show="*" if "Password" in field else "").place(x=100, y=y)
+        # # Loop for labels and entries
+        # for i, field in enumerate(fields):
+        #     y = 80 + i * 40
+        #     tk.Label(master, text=field + ":", font=("Helvetica", 10, "bold")).place(x=20, y=y)
+        #     tk.Entry(master, textvariable=vars[field], show="*" if "Password" in field else "").place(x=100, y=y)
+
+        # Declaring name and password as string variables.
+        first_name_var = tk.StringVar()
+        last_name_var = tk.StringVar()
+        username_var = tk.StringVar()
+        password_var = tk.StringVar()
+        confirm_password_var = tk.StringVar()
+
+        # Create labels.
+        first_name_lbl = tk.Label(master,
+                              text = "First name:",
+                              font = ("Helvetica", 10, "bold"))
+        last_name_lbl = tk.Label(master,
+                                text = "Last name:",
+                                font = ("Helvetica", 10, "bold"))
+        username_lbl = tk.Label(master,
+                                text = "Username:",
+                                font = ("Helvetica", 10, "bold"))
+        password_lbl = tk.Label(master,
+                                text = "Password:",
+                                font = ("Helvetica", 10, "bold"))
+        confirm_password_lbl = tk.Label(master,
+                                        text = "Confirm \nPassword:",
+                                        font = ("Helvetica", 10, "bold"))
+
+        # Entrys.
+        first_name_entry = tk.Entry(master,
+                                    textvariable = first_name_var)
+        last_name_entry = tk.Entry(master,
+                                textvariable = last_name_var)
+        username_entry = tk.Entry(master,
+                                textvariable = username_var)
+        password_entry=tk.Entry(master,
+                                textvariable = password_var,
+                                show = "*")
+        confirm_password_entry=tk.Entry(master,
+                                        textvariable = confirm_password_var,
+                                        show = "*")
+
+        # Placing the labels and entries.
+        first_name_lbl.place(x = 20, y = 120)
+        first_name_entry.place(x = 100, y = 120)
+
+        last_name_lbl.place(x = 20, y = 160)
+        last_name_entry.place(x = 100, y = 160)
+
+        username_lbl.place(x = 20, y = 200)
+        username_entry.place(x = 100, y = 200)
+
+        password_lbl.place(x = 20, y = 240)
+        password_entry.place(x = 100, y = 240)
+
+        confirm_password_lbl.place(x = 20, y = 280)
+        confirm_password_entry.place(x = 100, y = 280)
 
         # Signup button
-        tk.Button(master, text="Sign up", width=7, height=1, fg="black", bg="gold", command = self.signup).place(x=120, y=315)
-
-    def signup(self):
-        print(vars["First name"])
-        # first_name = vars.get("First name")
-        # last_name = vars.get("Last name")
-        # username = vars.get("Username")
-        # password = vars.get("Password")
-        # confirm_password = vars.get("Confirm\nPassword")
-
-        # print("First name: " + first_name)
-        # print("Last name: " + last_name)
-        # print("Username: " + username)
-        # print("Password: " + password)
-        # print("Confirm password: " + confirm_password)
+        tk.Button(master, text="Sign up", width=7, height=1, fg="black", bg="gold", command = signup).place(x=120, y=315)
         
 
     def open_login_window(self):
@@ -159,6 +252,8 @@ class NewWindow:
         self.master = master
         master.title("New Window")
         master.geometry("1200x700")
+        master.resizable(False, False)
+        master.configure(background="lemon chiffon")
 
         self.label = tk.Label(master, text="This is a new window")
         self.label.pack()
