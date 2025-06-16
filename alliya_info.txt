@@ -1,0 +1,6 @@
+
+Username: alliya
+First name: alliya
+Last name: buchanan
+Password: blue
+Birthdate: 2000-09-12 00:00:00

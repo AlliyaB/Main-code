@@ -106,10 +106,19 @@ class LoginWindow:
                         stored_password = (words[1]).strip()
 
                         if password == stored_password:
+
+                            # Create dictionary of user info for later access.
+                            user_info = {
+                                 "Username": username,
+                                 "First name": ((lines[2]).split())[2].strip(),
+                                 "Last name": ((lines[3]).split())[2].strip(),
+                                 "Birthdate": ((lines[5]).split())[1].strip()
+                                 }
+                            
                             messagebox.showinfo("Successful", "Log in successful." +
                                         f"\nWelcome back {username}")
                             self.master.destroy()
-                            NewWindow(tk.Tk())
+                            NewWindow(tk.Tk(), user_info)
                         else: 
                             messagebox.showerror("Invalid input", "Incorrect password. Please enter a valid password or signup.")
                 else:
@@ -242,11 +251,21 @@ class SignupWindow:
                                    f"Last name: {last_name}\n"
                                    f"Password: {password}\n"
                                    f"Birthdate: {birthdate}")
+                        
+                    # Create a dictionary of user info.
+                    user_info = {
+                                 "Username": username,
+                                 "First name": first_name,
+                                 "Last name": last_name,
+                                 "Birthdate": birthdate
+                                 }
 
                     messagebox.showinfo("Successful", "Sign up successful." +
                                         f"\nWelcome {username}")
                     self.master.destroy()
-                    NewWindow(tk.Tk())
+                    print("DEBUG user_info:", user_info)
+
+                    NewWindow(tk.Tk(), user_info)
 
             else:
                 messagebox.showerror("Invalid input", "Please enter all fields")
@@ -321,21 +340,17 @@ class SignupWindow:
 
 
 class NewWindow:
-    def __init__(self, master):
+    def __init__(self, master, user_info):
         self.master=master
         master.title("New Window")
         master.geometry("1200x700")
         master.resizable(False, False)
         master.configure(background="lemon chiffon")
 
-        self.label=tk.Label(master, text="This is a new window")
-        self.label.pack()
+        # Save user_info to this class.
+        self.user_info = user_info
 
-        # Display label.
-        program_title=tk.Label(master,
-            text="NZ Road safety Education",
-            font=("Helvetica", 15))
-        program_title.place(x=200, y=240)
+        tk.Label(master, text="Testing visibility in new window").place(x=200, y=300)
 
         # Create a coloured box for the top where navigation bar will be.
         canvas=Canvas(master,
@@ -366,17 +381,24 @@ class NewWindow:
             btn.place(x=50+i*115, y=15)
 
         # Container to hold all content frames
-        container=tk.Frame(master)
+        container=tk.Frame(master, width = 700, height = 800)
         container.place(x=0, y=70, width=1200, height=630)
+        container.grid_rowconfigure(0, weight = 1)
+        container.grid_columnconfigure(0, weight = 1)
         self.container=container
 
         self.frames={}
 
         for F in (HomePage, AboutPage, QuizPage, TestPage, ProfilePage, HelpPage):
             page_name=F.__name__
-            frame=F(parent=container, controller=self)
-            self.frames[page_name]=frame
+            # Pass user_info to profile page.
+            if page_name == "ProfilePage":
+                frame = F(master=container, controller=self, user_info=self.user_info, new_window=self.master)
+            else:
+                frame=F(master=container, controller=self)
 
+            self.frames[page_name]=frame
+            frame.configure(bg = "lemon chiffon")
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame("HomePage")
@@ -391,45 +413,112 @@ class NewWindow:
                                               + "progress will NOT be saved."
                                               + "\nAre you sure you want to "
                                               + "exit the program?",
-                                            icon='warning', parent=self.master)
+                                            icon='warning', master=self.master)
         if response == "yes":
             self.master.destroy()
 
 
 class HomePage(tk.Frame):
-    def __init__(self, parent, controller):
-        super().__init__(parent)
+    def __init__(self, master, controller):
+        super().__init__(master)
+        
         label=tk.Label(self, text="This is Home", font=("Arial", 16))
         label.pack(pady=20)
 
+        # Display labels for title and substitle.
+        program_title=tk.Label(self,
+                                 text="KiwiDrive",
+                                 font=("Helvetica", 100, "bold"),
+                                 fg="gold",
+                                 bg="lemon chiffon")
+        program_title.place(x=100, y=200)
+
+        sub_title=tk.Label(self, 
+                             text="Learn. Quiz. Test.", 
+                             font=("Helvetica", 20),
+                             bg="lemon chiffon")
+        sub_title.place(x=100, y=370)
+
+        # Create image.
+        image=Image.open("yellow_road_image.png")
+        resize_image=image.resize((400, 400))
+        img=ImageTk.PhotoImage(resize_image)
+        road_image=tk.Label(image=img, bd=0, highlightthickness=0)
+        road_image.image=img
+        road_image.place(x=750, y=200)
+
+        # Create dots for the letter I. To look like a traffic light.
+        dots=[(193, 'red'), (335, 'goldenrod1'), (522, 'green')]
+        for x, color in dots:
+            canvas=tk.Canvas(self, width=50, height=50, bg="lemon chiffon", bd=0, highlightthickness=0)
+            canvas.place(x=x, y=202)
+            canvas.create_oval(15, 15, 35, 35, fill=color, outline='')
+
 
 class AboutPage(tk.Frame):
-    def __init__(self, parent, controller):
-        super().__init__(parent)
+    def __init__(self, master, controller):
+        super().__init__(master)
         label=tk.Label(self, text="This is About", font=("Arial", 16))
         label.pack(pady=20)
 
+
 class QuizPage(tk.Frame):
-    def __init__(self, parent, controller):
-        super().__init__(parent)
+    def __init__(self, master, controller):
+        super().__init__(master)
         label=tk.Label(self, text="This is Quiz", font=("Arial", 16))
         label.pack(pady=20)
 
+
 class TestPage(tk.Frame):
-    def __init__(self, parent, controller):
-        super().__init__(parent)
+    def __init__(self, master, controller):
+        super().__init__(master)
         label=tk.Label(self, text="This is Test", font=("Arial", 16))
         label.pack(pady=20)
 
+
 class ProfilePage(tk.Frame):
-    def __init__(self, parent, controller):
-        super().__init__(parent)
+    def __init__(self, master, controller=None, user_info=None, new_window=None):
+        """Function to initilaise class."""
+
+        def signout():
+            """Function to sign the user out and redirect them to the first 
+            window.
+            """
+            response = messagebox.askquestion("Signout?","Your progress will "
+                                                "NOT be saved.\nAre you sure you want "
+                                                "to signout?",
+            icon = 'warning', master=self.master)
+            print(response)
+            if response == "yes":
+                self.new_window.destroy()
+
+                
+        super().__init__(master)
+        self.new_window = new_window
+        self.controller = controller
+        self.user_info = user_info or {}
+
         label=tk.Label(self, text="This is Profile", font=("Arial", 16))
         label.pack(pady=20)
 
+        tk.Label(self, text=f"Username: {user_info.get('Username', '')}").pack()
+        tk.Label(self, text=f"First name: {user_info.get('First name', '')}").pack()
+        tk.Label(self, text=f"Last name: {user_info.get('Last name', '')}").pack()
+        tk.Label(self, text=f"Birthdate: {user_info.get('Birthdate', '')}").pack()
+
+        signout_btn = tk.Button(self,
+                                text = "Signout",
+                                width = 7,
+                                height = 1,
+                                fg = "black",
+                                bg = "firebrick1",
+                                command = signout)
+        signout_btn.pack()
+
+
 class HelpPage(tk.Frame):
-    def __init__(self, parent, controller):
-        super().__init__(parent)
+    def __init__(self, master, controller):
+        super().__init__(master)
         label=tk.Label(self, text="This is Help", font=("Arial", 16))
         label.pack(pady=20)
 
