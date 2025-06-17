@@ -458,15 +458,44 @@ class HomePage(tk.Frame):
 class AboutPage(tk.Frame):
     def __init__(self, master, controller):
         super().__init__(master)
-        label=tk.Label(self, text="This is About", font=("Arial", 16))
+        label=tk.Label(self, text="This is About", font=("Helvetica", 16))
         label.pack(pady=20)
 
 
 class QuizPage(tk.Frame):
     def __init__(self, master, controller):
         super().__init__(master)
-        label=tk.Label(self, text="This is Quiz", font=("Arial", 16))
-        label.pack(pady=20)
+        quiz_title=tk.Label(self, text="Quiz", font=("Helvetica", 42), bg="lemon chiffon")
+        quiz_title.place(x=50, y=50)
+        
+        intro_lbl=tk.Label(self, 
+                           text="In quiz mode, there are a total of 3 "
+                           "quizzes to choose from, as seen below. \nAll of "
+                           "which consist of 10 - 15 questions with multiple "
+                           "choice answers. \nA correct answer will be "
+                           "indicated by a green tick. An incorrect answer "
+                           "\nis indicated by a red dot. \n\nDURING: As the "
+                           "questions are answered, you will be provided with "
+                           "the correct \nanswer as a response. Please read "
+                           "the response to improve your understanding. "
+                           "\n\nAFTER: Once the quiz is completed, you will "
+                           "be provided with insights of the number of "
+                           "\nquestions answered correctly/incorrectly and a "
+                           "percentage will be calculated.  \nFeel free to "
+                           "try more quizzes or test how much you know!", 
+                           bg="lemon chiffon", 
+                           justify="left")
+        intro_lbl.place(x=50, y=150)
+
+        # Create buttons for different quiz options.
+        theory_btn=tk.Button(self, text="Theory")
+        behaviour_btn=tk.Button(self, text="Behaviour")
+        emergency_btn=tk.Button(self, text="Emergency")
+
+        # Place buttons.
+        theory_btn.place(x=700, y=200)
+        behaviour_btn.place(x=700, y=400)
+        emergency_btn.place(x=900, y=200)
 
 
 class TestPage(tk.Frame):
@@ -491,7 +520,6 @@ class ProfilePage(tk.Frame):
             print(response)
             if response == "yes":
                 self.new_window.destroy()
-
                 
         super().__init__(master)
         self.new_window = new_window
