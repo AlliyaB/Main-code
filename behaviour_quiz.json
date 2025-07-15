@@ -1,0 +1,116 @@
+
+{
+    "question": [
+      "Q1. If you are 20 or over, what is the legal alcohol limit in micrograms per litre of breath?",
+      "Q2. When driving into bright sunlight, you should use sunglasses and your vehicle sun visors for safety. What else are you advised to do?",
+      "Q3. What is the recommended minimum distance you should allow when driving past a cyclist?",
+      "Q4. When passing a bus displaying a School sign that has stopped to let children on or off, what should your speed be?",
+      "Q5. In addition to checking it is safe to move out from the kerb into the traffic flow, what must you do?",
+      "Q6. You are the driver of the blue car. Of the four hazards marked, which one is most likely to require you to take urgent action?",
+      "Q7. You see a pedestrian carrying a white cane crossing the road. What should you do?",
+      "Q8. If you have to drive at a slow speed that may hold up other vehicles, what should you do?",
+      "Q9. When traffic is merging, what is a good rule to follow?",
+      "Q10. If you are driving a car, what should you do when following another vehicle in wet conditions?",
+      "Q11. When are you allowed to drive across a cycle lane?",
+      "Q12. You are driving downhill on a steep, narrow road and a vehicle is coming up the hill. What should you do?",
+      "Q13. How would you describe a good driver?",
+      "Q14. Are you allowed to pass on a solid yellow line?",
+      "Q15. What should you do when there are animals coming towards you on the road?"
+    ],
+    "answer": [
+      2,
+      3,
+      2,
+      1,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      4,
+      1,
+      3,
+      3,
+      2
+    ],
+    "options": [
+  
+      ["400",
+        "*250",
+        "200",
+        "150"
+      ],
+      ["Leave your windscreen dirty to block out some of the sun",
+        "Turn your headlights on",
+        "Slow down, or pull over until visibility improves",
+        "Drive on the far left of the road"
+      ],
+      ["1m",
+        "1.5m",
+        "2m",
+        "2.5m"
+      ],
+      ["20km/h",
+        "50km/h",
+        "70km/h",
+        "100km/h"
+      ],
+      ["Reverse away from the kerb",
+        "Accelerate as fast as possible into traffic flow",
+        "Signal for at least 3 seconds",
+        "Move cautiously into a space in the traffic"
+      ],
+      ["The man on the opposite side of the road (a)",
+        "The child on your side of the road (b)",
+        "The parked car on your side of the road (c)",
+        "The parked car on the opposite side of the road (d)"
+      ],
+      ["Toot your horn to let them know you’re there and they should hurry up",
+        "Stop and wait for them to cross",
+        "Speed up and pass in front of them.",
+        "Stop directly in the crosswalk"
+      ],
+      ["Drive at night when there’s less traffic",
+        "Keep to the left and let others pass where possible",
+        "Nothing - drive as normal as it’s other drivers’ responsibility to overtake you safely",
+        "Keep as close as you can to the centre of the road"
+      ],
+      ["The larger vehicle has the right of way",
+        "Merge like a zip (let one vehicle in then go)",
+        "The smaller vehicle has right of way",
+        "Speed up to make more room behind you"
+      ],
+      ["Observe the two-second rule",
+        "Observe the four-second rule",
+        "Observe the six second rule",
+        "Try to overtake so that you are not blinded by the spray"
+      ],
+      ["To turn into a driveway",
+        "To turn into a side road",
+        "To park",
+        "All of the above",
+        "None of the above"
+      ],
+      ["Vehicles moving downhill should give way to vehicles moving uphill",
+        "Sound your horn and signal the other vehicle to move out of the way",
+        "Carry on - the other vehicle will move out of the way",
+        "Flash your headlights to determine who goes first"
+      ],
+      ["A good driver is fast and smooth in the corners",
+        "A good driver knows how to stay alert even while driving tired",
+        "A good driver anticipates what other drivers are going to do and is aware of what’s going on around them",
+        "A good driver knows how to work around distractions like a cellphone, the radio and eating in the car"
+      ],
+      ["No",
+        "Yes",
+        "Yes, but only if you can make the pass without crossing the yellow line and can see 100m ahead of you for the whole time you are passing",
+        "Yes, if there are no cars in the way"
+      ],
+      ["Flash your lights - the animals will see this and move out of the way",
+        "Slow down or pull over to the left until the animals have moved past you",
+        "Sound your horn to help move the animals",
+        "Get a passenger to clear a path through the animals"
+      ]
+    ]
+  }

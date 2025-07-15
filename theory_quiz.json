@@ -1,0 +1,115 @@
+
+{
+    "question": [
+      "Q1. What should you do before any modification is carried out on your vehicle?",
+      "Q2. Passengers in your vehicle are 15 years or over. Who is responsible for making sure they wear a safety belt?",
+      "Q3. If you have had a flat tyre and have fitted a space saver wheel what must you do?",
+      "Q4. If you're under 20 and you're caught with any level of blood alcohol by the police, what is the minimum penalty?",
+      "Q5. Which person can legally stop and perform a roadside check of your vehicle?",
+      "Q6. What is the minimum tread depth required for car tyres?",
+      "Q7. If you have a restricted licence, what hours must you NOT drive on your own?",
+      "Q8. Which parts of the car must be in good condition to prevent too much noise and gases entering the car?",
+      "Q9. At night, a towed vehicle must:",
+      "Q10. What is the maximum legal speed limit for a car towing a trailer on the open road?",
+      "Q11. If you tow another vehicle, what is the maximum distance allowed between the two vehicles?",
+      "Q12. What is the maximum distance a load may extend in front of a car?",
+      "Q13. What does a Warrant of Fitness show?",
+      "Q14. If you have a restricted licence and you are caught driving at 2:30am on your own by the police, what happens?",
+      "Q15. Are you allowed to drive a vehicle with a load that is not tied on properly?"
+    ],
+    "answer": [
+      2,
+      3,
+      1,
+      2,
+      3,
+      3,
+      1,
+      2,
+      1,
+      3,
+      2,
+      2,
+      2,
+      3,
+      4
+    ],
+    "options": [
+  
+      ["Modifying your vehicle is OK as long as you purchase the parts from a reputable dealer",
+        "*Check with an authorised vehicle inspector",
+        "Get a certificate from the police",
+        "Record the modification on your vehicle ownership papers"
+      ],
+      ["The oldest person in the car",
+        "The driver",
+        "*The passenger",
+        "The owner of the car"
+      ],
+      ["*Drive at 80km/h (or the speed denoted on the wheel) or less to a place you can fix the tyre as soon as possible",
+        "Drive up to 300km if the weather is fine",
+        "Lower the pressure in the other tyres",
+        "Put your hazard warning lights on while you are driving"
+      ],
+      ["Your licence will be suspended",
+        "*$200 fine and 50 demerit points",
+        "$100 fine and 35 demerit points",
+        "Nothing for a first offence, then licence suspension for the second offence"
+      ],
+      ["Fire officer",
+        "Ambulance officer",
+        "Police officer",
+        "Tow truck driver"
+      ],
+      ["1mm",
+        "1.25mm",
+        "*1.5mm",
+        "2mm"
+      ],
+      ["*10pm-5am",
+        "Dawn to dusk",
+        "6am-6pm",
+        "6am-10pm"
+      ],
+      ["Windows",
+        "*Exhaust, silencer (muffler) and engine",
+        "Heater and air conditioning",
+        "Mudguards and mud flaps"
+      ],
+      ["*Have a red light at the back",
+        "Have a white light at the back",
+        "Have its hazard warning lights on or horn sounding",
+        "Be travelling slower than 50km/h"
+      ],
+      ["80km/h",
+        "85km/h",
+        "*90km/h",
+        "95km/h"
+      ],
+      ["2m",
+        "*4m",
+        "6m",
+        "8m"
+      ],
+      ["1m in front of the bumper",
+        "*3m from the front edge of the front seat",
+        "4m from the front edge of the seat",
+        "5m from the front edge of the seat"
+      ],
+      ["The vehicle is roadworthy now",
+        "*The vehicle has been inspected by an approved WoF inspector and was roadworthy at the timeut",
+        "The year the vehicle was made",
+        "The condition of the vehicle"
+      ],
+      ["$300 fine",
+        "Your restricted licence is suspended for 3 months and you are fined $100",
+        "*35 demerit points and a $100 fine",
+        "25 demerit points and a $100 fine"
+      ],
+      ["Yes, but drive at less than 20km/h",
+        "Yes, if you’re confident it won’t come off the trailer",
+        "Yes, if you put a white or red flag on the right hand-corner",
+        "*No, never"
+      ]
+    ]
+  }
