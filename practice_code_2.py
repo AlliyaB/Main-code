@@ -536,23 +536,25 @@ class QuizPage(tk.Frame):
         self.options = (data['options'])
         self.answer = (data[ 'answer'])
         print("code got to open_quiz function")      #debugging statement
-        self.quiz=tk.Toplevel(self.master)
-        Quiz(self.quiz, self.question)
+
+        # Create the top level quiz window.
+        Quiz(self.master, (self.question, self.options, self.answer))
 
     def get_quiz_data(self):
         """Function to get the quiz data for generation."""
         return self.question, self.options, self.answer
     
-class Quiz:
+class Quiz(tk.Toplevel):
     """Class to define the components of the self."""
-    def __init__(self, question):
-        super().__init__()
+    def __init__(self, master, quiz_data):
+        super().__init__(master)
         """Function called when new object of class is intitialised. Set 
         question count to 0 and initilise all other functions for content."""
-        self = Tk()
         self.geometry("800x450")
         self.title("GeeksforGeeks Quiz")
         print("Code is now inside the class quiz.")  # Debug statement.
+
+        self.question, self.options, self.answer = quiz_data
 
         # set question number to 0
         self.q_no=0
@@ -571,15 +573,16 @@ class Quiz:
         quit_button = Button(self, text="Quit", command=self.destroy,
         width=5,bg="black", fg="white",font=("ariel",16," bold"))
 
-        # Function 
-        self.display_options()
+        # Function.
+        self.display_options(self.options)
+        self.display_question(self.question)
 
         # Place buttons.
         next_button.place(x=350,y=380)
         quit_button.place(x=700,y=50)
         
         # no of questions
-        self.data_size=len(question)
+        self.data_size=len(self.question)
         
         # keep a counter of correct answers
         self.correct=0
@@ -599,9 +602,9 @@ class Quiz:
 
     def check_ans(self, q_no, answer):
         """Function to check the answer after user has clicked next."""
-        # Check if selected option is correct and return true.
+        # Check if selected option is correct.
         if self.opt_selected.get() == answer[q_no]:
-            return True
+            return self.opt_selected.get() == answer[q_no]
         
     def display_options(self, options):
         """Function to reset question options for next question."""
@@ -613,6 +616,8 @@ class Quiz:
         for option in options[self.q_no]:
             self.opts[val]['text']=option
             val+=1
+
+        print("Code is inside the display_options function", val)
         
     def display_question(self, question):
             # Show and set the Question properties
@@ -622,10 +627,10 @@ class Quiz:
 
     def next_btn(self):
         """Function to check if the answer is correct, then increase question count by 1."""
-
+        
         if self.opt_selected:
             # Check if the answer is correct, then increment correct by 1.
-            if self.check_ans(self.q_no):
+            if self.check_ans(self.q_no, self.answer):
                 self.correct += 1
             
             # Moves to next Question by incrementing the q_no counter
@@ -634,14 +639,15 @@ class Quiz:
             # checks if the q_no size is equal to the data size
             if self.q_no==self.data_size:
                 
+                
                 # if it is correct then it displays the score
                 self.display_result()
                 # destroys the self
                 self.destroy()
             else:
                 # shows the next question
-                self.display_question()
-                self.display_options()
+                self.display_question(self.question)
+                self.display_options(self.options)
         else:
             messagebox.showerror("Invalid input", "Please select an option.")
 
@@ -654,13 +660,13 @@ class Quiz:
         # initialize the list with an empty list of options and position first option.
         q_list = []
         y_pos = 150
-        
+
         # adding the options to the list
         while len(q_list) < 4:
             
             # setting the radio button properties
-            radio_btn = Radiobutton(self,text=" ",variable=self.opt_selected,
-            value = len(q_list)+1,font = ("ariel",14))
+            radio_btn = Radiobutton(self, text="", variable=self.opt_selected,
+            value = len(q_list)+1, font = ("ariel",14))
             
             # Add button to the list then place it.
             q_list.append(radio_btn)
