@@ -58,7 +58,7 @@
       ],
       ["Fire officer",
         "Ambulance officer",
-        "Police officer",
+        "*Police officer",
         "Tow truck driver"
       ],
       ["1mm",
@@ -107,7 +107,7 @@
         "25 demerit points and a $100 fine"
       ],
       ["Yes, but drive at less than 20km/h",
-        "Yes, if you’re confident it won’t come off the trailer",
+        "Yes, if you're confident it won't come off the trailer",
         "Yes, if you put a white or red flag on the right hand-corner",
         "*No, never"
       ]

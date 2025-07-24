@@ -396,7 +396,7 @@ class NewWindow:
         for F in (HomePage, AboutPage, QuizPage, TestPage, ProfilePage, HelpPage):
             page_name=F.__name__
             # Pass user_info to profile page.
-            if page_name == "ProfilePage":
+            if page_name == "ProfilePage" or page_name=="QuizPage":
                 frame = F(master=container, controller=self, user_info=self.user_info, new_window=self.master)
             else:
                 frame=F(master=container, controller=self)
@@ -467,10 +467,14 @@ class AboutPage(tk.Frame):
 
 
 class QuizPage(tk.Frame):
-    def __init__(self, master, controller):
+    def __init__(self, master, controller=None, user_info=None, new_window=None):
         super().__init__(master)
         quiz_title=tk.Label(self, text="Quiz", font=("Helvetica", 42), bg="lemon chiffon")
         quiz_title.place(x=50, y=50)
+
+        self.new_window = new_window
+        self.controller = controller
+        self.user_info = user_info or {}
         
         intro_lbl=tk.Label(self, 
                            text="In quiz mode, there are a total of 3 "
@@ -512,20 +516,20 @@ class QuizPage(tk.Frame):
     def choose_theory(self):
         self.chosen_quiz = 'theory_quiz.json'
         print("code got to here")              #Debugging statement.
-        self.open_quiz(self.chosen_quiz)
+        self.open_quiz(self.chosen_quiz, self.user_info)
     
     def choose_behaviour(self):
         self.chosen_quiz = 'behaviour_quiz.json'
-        self.open_quiz(self.chosen_quiz)
+        self.open_quiz(self.chosen_quizself.user_info)
 
     def choose_emergency(self):
         self.chosen_quiz = 'emergency_quiz.json'
-        self.open_quiz(self.chosen_quiz)
+        self.open_quiz(self.chosen_quiz, self.user_info)
 
     def get_chosen_quiz(self):
         return self.chosen_quiz
     
-    def open_quiz(self, chosen_quiz):
+    def open_quiz(self, chosen_quiz, user_info):
         # Get the data from the json file.
         with open(chosen_quiz) as f:
             data = json.load(f)
@@ -536,7 +540,7 @@ class QuizPage(tk.Frame):
         self.answer = (data[ 'answer'])
 
         # Create the top level quiz window.
-        Quiz(self.master, (self.question, self.options, self.answer), chosen_quiz)
+        Quiz(self.master, (self.question, self.options, self.answer), chosen_quiz, user_info)
 
     def get_quiz_data(self):
         """Function to get the quiz data for generation."""
@@ -544,7 +548,7 @@ class QuizPage(tk.Frame):
     
 class Quiz(tk.Toplevel):
     """Class to define the components of the self."""
-    def __init__(self, master, quiz_data, chosen_quiz):
+    def __init__(self, master, quiz_data, chosen_quiz, user_info):
         super().__init__(master)
         """Function called when new object of class is intitialised. Set 
         question count to 0 and initilise all other functions for content."""
@@ -553,7 +557,9 @@ class Quiz(tk.Toplevel):
         quiz_name = chosen_quiz.split("_quiz.json")[0]
         self.title(f"{quiz_name} quiz")
 
+        # Saving variables from other classes to this class.
         self.question, self.options, self.answer = quiz_data
+        self.user_info = user_info
 
         # set question number to 0
         self.q_no=0
@@ -588,7 +594,7 @@ class Quiz(tk.Toplevel):
         # keep a counter of correct answers
         self.correct=0
 
-    def display_result(self):
+    def display_result(self, user_info):
         """Function to calculate, display, and save user results."""
         # Calculate how many questions user answered incorrectly.
         wrong_count = self.data_size - self.correct
@@ -601,6 +607,20 @@ class Quiz(tk.Toplevel):
         print(f"{score}\n{correct}\n{wrong}") # Debug statement
         
         messagebox.showinfo("Quiz complete!\nResult", f"{result}\n{correct}\n{wrong}")
+
+        # Save users results to their file.
+        today=date.today()
+        quiz_results=(
+            f"\nQuiz results ({today}):\n"
+            f"Score: {score}\n"
+            f"{correct}\n"
+            f"{wrong}"
+        )
+
+        # Get username.
+        username=user_info.get('Username', '')
+        with open(f"{username}_info.txt", "a") as file:
+                        file.write(f"\n{quiz_results}\n")
 
     def check_ans(self, q_no, answer):
         """Function to check the answer after user has clicked next."""
@@ -643,7 +663,7 @@ class Quiz(tk.Toplevel):
                 
                 
                 # if it is correct then it displays the score
-                self.display_result()
+                self.display_result(self.user_info)
                 # destroys the self
                 self.destroy()
             else:
