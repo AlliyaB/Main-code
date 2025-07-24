@@ -10,6 +10,8 @@ import os
 from datetime import date
 """Allows the current time to be imported."""
 from datetime import datetime
+"""Allows json file to be used for data."""
+import json
 
 class MainWindow:
     def __init__(self, master):
@@ -219,7 +221,7 @@ class SignupWindow:
                         today_precedes_dob=(today.month, today.day) < \
                             (birthdate.month, birthdate.day)
                         age=difference - today_precedes_dob
-                        if age <= 0 or age > 99:
+                        if age <= 0 or age >=99:
                             messagebox.showerror("Invalid input", "Please enter a valid "
                                                 "birthdate (dd/mm/yyyy)")
                             return
@@ -252,6 +254,9 @@ class SignupWindow:
                                    f"Password: {password}\n"
                                    f"Birthdate: {birthdate}")
                         
+                    #Debugging statment
+                    print(age)
+                        
                     # Create a dictionary of user info.
                     user_info = {
                                  "Username": username,
@@ -263,7 +268,6 @@ class SignupWindow:
                     messagebox.showinfo("Successful", "Sign up successful." +
                                         f"\nWelcome {username}")
                     self.master.destroy()
-                    print("DEBUG user_info:", user_info)
 
                     NewWindow(tk.Tk(), user_info)
 
@@ -488,21 +492,226 @@ class QuizPage(tk.Frame):
         intro_lbl.place(x=50, y=150)
 
         # Create buttons for different quiz options.
-        theory_btn=tk.Button(self, text="Theory")
-        behaviour_btn=tk.Button(self, text="Behaviour")
-        emergency_btn=tk.Button(self, text="Emergency")
+        theory_btn=tk.Button(self, text="Theory", command=self.choose_theory)
+        behaviour_btn=tk.Button(self, text="Behaviour", command=self.choose_behaviour)
+        emergency_btn=tk.Button(self, text="Emergency", command=self.choose_emergency)
 
         # Place buttons.
         theory_btn.place(x=700, y=200)
         behaviour_btn.place(x=700, y=400)
         emergency_btn.place(x=900, y=200)
 
+        # # Create images for the button icons.
+        # image=Image.open("theory_image_1.webp")
+        # resize_image=image.resize((400, 400))
+        # img=ImageTk.PhotoImage(resize_image)
+        # road_image=tk.Label(image=img, bd=0, highlightthickness=0)
+        # road_image.image=img
+        # road_image.place(x=750, y=200)
+
+    def choose_theory(self):
+        self.chosen_quiz = 'theory_quiz.json'
+        print("code got to here")              #Debugging statement.
+        self.open_quiz(self.chosen_quiz)
+    
+    def choose_behaviour(self):
+        self.chosen_quiz = 'behaviour_quiz.json'
+        self.open_quiz(self.chosen_quiz)
+
+    def choose_emergency(self):
+        self.chosen_quiz = 'emergency_quiz.json'
+        self.open_quiz(self.chosen_quiz)
+
+    def get_chosen_quiz(self):
+        return self.chosen_quiz
+    
+    def open_quiz(self, chosen_quiz):
+        # Get the data from the json file.
+        with open(chosen_quiz) as f:
+            data = json.load(f)
+
+        # Set the question, options, and answer.
+        self.question = (data['question'])
+        self.options = (data['options'])
+        self.answer = (data[ 'answer'])
+
+        # Create the top level quiz window.
+        Quiz(self.master, (self.question, self.options, self.answer), chosen_quiz)
+
+    def get_quiz_data(self):
+        """Function to get the quiz data for generation."""
+        return self.question, self.options, self.answer
+    
+class Quiz(tk.Toplevel):
+    """Class to define the components of the self."""
+    def __init__(self, master, quiz_data, chosen_quiz):
+        super().__init__(master)
+        """Function called when new object of class is intitialised. Set 
+        question count to 0 and initilise all other functions for content."""
+        self.geometry("800x450")
+        # Extract quiz name from file path of chosen quiz.
+        quiz_name = chosen_quiz.split("_quiz.json")[0]
+        self.title(f"{quiz_name} quiz")
+
+        self.question, self.options, self.answer = quiz_data
+
+        # set question number to 0
+        self.q_no=0
+        # Hold an integer value to select an option in a question.
+        self.opt_selected = tk.IntVar(self, value=0)
+        # Set options to zero.
+        self.opt_selected.set(0)
+        # Use radio button to display current question and display options.
+        self.opts=self.radio_buttons()
+        # display current question options, buttons, title, and display questions.
+        title = Label(self, text=f"{quiz_name} QUIZ",
+        width=50, bg="green",fg="white", font=("ariel", 20, "bold"))
+        title.place(x=0, y=2)
+
+        # Display buttons.
+        next_button = Button(self, text="Next",command=self.next_btn,
+        width=10,bg="blue",fg="white",font=("ariel",16,"bold"))
+        quit_button = Button(self, text="Quit", command=self.destroy,
+        width=5,bg="black", fg="white",font=("ariel",16," bold"))
+
+        # Function.
+        self.display_options(self.options)
+        self.display_question(self.question)
+
+        # Place buttons.
+        next_button.place(x=350,y=380)
+        quit_button.place(x=700,y=50)
+        
+        # no of questions
+        self.data_size=len(self.question)
+        
+        # keep a counter of correct answers
+        self.correct=0
+
+    def display_result(self):
+        """Function to calculate, display, and save user results."""
+        # Calculate how many questions user answered incorrectly.
+        wrong_count = self.data_size - self.correct
+        correct = f"Correct: {self.correct}"
+        wrong = f"Wrong: {wrong_count}"
+        
+        # calcultaes the percentage of correct answers.
+        score = int(self.correct / self.data_size * 100)
+        result = f"Score: {score}%"
+        print(f"{score}\n{correct}\n{wrong}") # Debug statement
+        
+        messagebox.showinfo("Quiz complete!\nResult", f"{result}\n{correct}\n{wrong}")
+
+    def check_ans(self, q_no, answer):
+        """Function to check the answer after user has clicked next."""
+        # Check if selected option is correct.
+        if self.opt_selected.get() == answer[q_no]:
+            return self.opt_selected.get() == answer[q_no]
+        
+    def display_options(self, options):
+        """Function to reset question options for next question."""
+        val=0
+        # Deselect options.
+        self.opt_selected.set(0)
+        
+        # Loop over options to display for radio button text.
+        for option in options[self.q_no]:
+            self.opts[val]['text']=option
+            val+=1
+
+        print("Code is inside the display_options function", val)
+        
+    def display_question(self, question):
+            # Show and set the Question properties
+            q_no = Label(self, text=question[self.q_no], width=60,
+            font=( 'ariel' ,16, 'bold' ), anchor= 'w' )
+            q_no.place(x=70, y=100)
+
+    def next_btn(self):
+        """Function to check if the answer is correct, then increase question count by 1."""
+        
+        if self.opt_selected:
+            # Check if the answer is correct, then increment correct by 1.
+            if self.check_ans(self.q_no, self.answer):
+                self.correct += 1
+            
+            # Moves to next Question by incrementing the q_no counter
+            self.q_no += 1
+            
+            # checks if the q_no size is equal to the data size
+            if self.q_no==self.data_size:
+                
+                
+                # if it is correct then it displays the score
+                self.display_result()
+                # destroys the self
+                self.destroy()
+            else:
+                # shows the next question
+                self.display_question(self.question)
+                self.display_options(self.options)
+        else:
+            messagebox.showerror("Invalid input", "Please select an option.")
+
+    # This method shows the radio buttons to select the Question
+    # on the screen at the specified position. It also returns a
+    # list of radio button which are later used to add the options to
+    # them.
+    def radio_buttons(self):
+        
+        # initialize the list with an empty list of options and position first option.
+        q_list = []
+        y_pos = 150
+
+        # adding the options to the list
+        while len(q_list) < 4:
+            
+            # setting the radio button properties
+            radio_btn = Radiobutton(self, text="", variable=self.opt_selected,
+            value = len(q_list)+1, font = ("ariel",14))
+            
+            # Add button to the list then place it.
+            q_list.append(radio_btn)
+            radio_btn.place(x = 100, y = y_pos)
+            
+            # incrementing the y-axis position by 40
+            y_pos += 40
+        
+        # return the radio buttons
+        return q_list
+
 
 class TestPage(tk.Frame):
     def __init__(self, master, controller):
         super().__init__(master)
-        label=tk.Label(self, text="This is Test", font=("Arial", 16))
-        label.pack(pady=20)
+        test_title=tk.Label(self, text="Test", font=("Helvetica", 42), bg="lemon chiffon")
+        test_title.place(x=50, y=50)
+        
+        intro_lbl=tk.Label(self, 
+                           text="In test mode, there are a total of 25 "
+                           "quizzes which you are tested on. \nThese cover "
+                           "general road safety test questoins. Test "
+                           "conditions apply. \nMeaning progress cannot be "
+                           "resumed once started and there is no indication "
+                           "\nof correct/incorrect answers until completion. "
+                           "\n\nBENEFITS:\n- Reinforce learning through "
+                           "quizzes\n- Gain confidence in road safety "
+                           "knowledge\n- Measure your progress"
+                           "\n\nAFTER: Once the test is completed, you will "
+                           "be provided with insights of the number of "
+                           "\nquestions answered correctly/incorrectly and a "
+                           "percentage will be calculated. \nFeel free to "
+                           "try again and improve your score or "
+                           "learn more through quizzes!",
+                           bg="lemon chiffon", 
+                           justify="left")
+        intro_lbl.place(x=50, y=150)
+
+        # Create buttons for different quiz options.
+        thest_btn=tk.Button(self, text="Start now")
+
+        # Place buttons.
+        thest_btn.place(x=700, y=200)
 
 
 class ProfilePage(tk.Frame):

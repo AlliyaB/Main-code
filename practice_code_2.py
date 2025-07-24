@@ -221,7 +221,7 @@ class SignupWindow:
                         today_precedes_dob=(today.month, today.day) < \
                             (birthdate.month, birthdate.day)
                         age=difference - today_precedes_dob
-                        if age <= 0 or age > 99:
+                        if age <= 0 or age >=99:
                             messagebox.showerror("Invalid input", "Please enter a valid "
                                                 "birthdate (dd/mm/yyyy)")
                             return
@@ -268,7 +268,6 @@ class SignupWindow:
                     messagebox.showinfo("Successful", "Sign up successful." +
                                         f"\nWelcome {username}")
                     self.master.destroy()
-                    print("DEBUG user_info:", user_info)
 
                     NewWindow(tk.Tk(), user_info)
 
@@ -535,10 +534,9 @@ class QuizPage(tk.Frame):
         self.question = (data['question'])
         self.options = (data['options'])
         self.answer = (data[ 'answer'])
-        print("code got to open_quiz function")      #debugging statement
 
         # Create the top level quiz window.
-        Quiz(self.master, (self.question, self.options, self.answer))
+        Quiz(self.master, (self.question, self.options, self.answer), chosen_quiz)
 
     def get_quiz_data(self):
         """Function to get the quiz data for generation."""
@@ -546,24 +544,27 @@ class QuizPage(tk.Frame):
     
 class Quiz(tk.Toplevel):
     """Class to define the components of the self."""
-    def __init__(self, master, quiz_data):
+    def __init__(self, master, quiz_data, chosen_quiz):
         super().__init__(master)
         """Function called when new object of class is intitialised. Set 
         question count to 0 and initilise all other functions for content."""
         self.geometry("800x450")
-        self.title("GeeksforGeeks Quiz")
-        print("Code is now inside the class quiz.")  # Debug statement.
+        # Extract quiz name from file path of chosen quiz.
+        quiz_name = chosen_quiz.split("_quiz.json")[0]
+        self.title(f"{quiz_name} quiz")
 
         self.question, self.options, self.answer = quiz_data
 
         # set question number to 0
         self.q_no=0
         # Hold an integer value to select an option in a question.
-        self.opt_selected=IntVar()
+        self.opt_selected = tk.IntVar(self, value=0)
+        # Set options to zero.
+        self.opt_selected.set(0)
         # Use radio button to display current question and display options.
         self.opts=self.radio_buttons()
         # display current question options, buttons, title, and display questions.
-        title = Label(self, text="GeeksforGeeks QUIZ",
+        title = Label(self, text=f"{quiz_name} QUIZ",
         width=50, bg="green",fg="white", font=("ariel", 20, "bold"))
         title.place(x=0, y=2)
 
@@ -588,7 +589,7 @@ class Quiz(tk.Toplevel):
         self.correct=0
 
     def display_result(self):
-        """Function to calculate and display user results."""
+        """Function to calculate, display, and save user results."""
         # Calculate how many questions user answered incorrectly.
         wrong_count = self.data_size - self.correct
         correct = f"Correct: {self.correct}"
@@ -597,8 +598,9 @@ class Quiz(tk.Toplevel):
         # calcultaes the percentage of correct answers.
         score = int(self.correct / self.data_size * 100)
         result = f"Score: {score}%"
+        print(f"{score}\n{correct}\n{wrong}") # Debug statement
         
-        messagebox.showinfo("Result", f"{result}\n{correct}\n{wrong}")
+        messagebox.showinfo("Quiz complete!\nResult", f"{result}\n{correct}\n{wrong}")
 
     def check_ans(self, q_no, answer):
         """Function to check the answer after user has clicked next."""
@@ -682,8 +684,34 @@ class Quiz(tk.Toplevel):
 class TestPage(tk.Frame):
     def __init__(self, master, controller):
         super().__init__(master)
-        label=tk.Label(self, text="This is Test", font=("Arial", 16))
-        label.pack(pady=20)
+        test_title=tk.Label(self, text="Test", font=("Helvetica", 42), bg="lemon chiffon")
+        test_title.place(x=50, y=50)
+        
+        intro_lbl=tk.Label(self, 
+                           text="In test mode, there are a total of 25 "
+                           "quizzes which you are tested on. \nThese cover "
+                           "general road safety test questoins. Test "
+                           "conditions apply. \nMeaning progress cannot be "
+                           "resumed once started and there is no indication "
+                           "\nof correct/incorrect answers until completion. "
+                           "\n\nBENEFITS:\n- Reinforce learning through "
+                           "quizzes\n- Gain confidence in road safety "
+                           "knowledge\n- Measure your progress"
+                           "\n\nAFTER: Once the test is completed, you will "
+                           "be provided with insights of the number of "
+                           "\nquestions answered correctly/incorrectly and a "
+                           "percentage will be calculated. \nFeel free to "
+                           "try again and improve your score or "
+                           "learn more through quizzes!",
+                           bg="lemon chiffon", 
+                           justify="left")
+        intro_lbl.place(x=50, y=150)
+
+        # Create buttons for different quiz options.
+        thest_btn=tk.Button(self, text="Start now")
+
+        # Place buttons.
+        thest_btn.place(x=700, y=200)
 
 
 class ProfilePage(tk.Frame):
