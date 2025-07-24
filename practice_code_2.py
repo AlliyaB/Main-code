@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import *
-from tkinter import messagebox 
+from tkinter import messagebox as mb
 """Creates and modifies images."""
 from PIL import ImageTk
 """Provides the python intepreter with image editing capabilities."""
@@ -70,17 +70,37 @@ class MainWindow:
         signup_btn.place(x=940, y=15)
         exit_btn.place(x=1080, y=15)
 
+        # Set windows to none.
+        self.login_window = None
+        self.signup_window = None
+
     def open_login_window(self):
+        # Destroy signup window if it exists
+        if self.signup_window is not None and self.signup_window.winfo_exists():
+            self.signup_window.destroy()
+            self.signup_window = None
+
+        # Ensure the user cannot keep opening duplicates.
+        if self.login_window is not None and self.login_window.winfo_exists():
+            return
         self.login_window=tk.Toplevel(self.master)
         LoginWindow(self.login_window)
 
     def open_signup_window(self):
-        self.open_signup_window=tk.Toplevel(self.master)
-        SignupWindow(self.open_signup_window)
+        # Destroy login window if it exists
+        if self.login_window is not None and self.login_window.winfo_exists():
+            self.login_window.destroy()
+            self.login_window = None
+
+        # Ensure the user cannot keep opening duplicates.
+        if self.signup_window is not None and self.signup_window.winfo_exists():
+            return
+        self.signup_window=tk.Toplevel(self.master)
+        SignupWindow(self.signup_window)
 
     def checkexit(self):
         """Function to confirm user wants to exit application."""
-        response=messagebox.askquestion("Exit Programme?","Your "
+        response=mb.askquestion("Exit Programme?","Your "
                                               + "progress will NOT be saved."
                                               + "\nAre you sure you want to "
                                               + "exit the program?",
@@ -117,23 +137,26 @@ class LoginWindow:
                                  "Birthdate": ((lines[5]).split())[1].strip()
                                  }
                             
-                            messagebox.showinfo("Successful", "Log in successful." +
-                                        f"\nWelcome back {username}")
+                            mb.showinfo("Successful", "Log in successful." +
+                                        f"\nWelcome back {username}", parent=self.master)
                             self.master.destroy()
                             NewWindow(tk.Tk(), user_info)
                         else: 
-                            messagebox.showerror("Invalid input", "Incorrect password. Please enter a valid password or signup.")
+                            mb.showerror("Invalid input", "Incorrect password. Please enter a valid password or signup.", parent=self.master)
                 else:
-                    messagebox.showerror("Invalid input", "Incorrect username. Please enter a valid username or signup.")
+                    mb.showerror("Invalid input", "Incorrect username. Please enter a valid username or signup.", parent=self.master)
             else:
-                messagebox.showerror("Invalid input", "There are missing " +
-                                    "fields.\nPlease enter all fields.")
+                mb.showerror("Invalid input", "There are missing " +
+                                    "fields.\nPlease enter all fields.", parent=self.master)
 
         self.master=master
+        self.master.attributes('-topmost', True)
         master.title("Login")
         master.geometry("350x450")
         master.resizable(False, False)
         master.configure(background="lemon chiffon")
+
+        self.open_login_window = False
 
         canvas=Canvas(master,
                         height=70,
@@ -173,9 +196,15 @@ class LoginWindow:
         canvas.place(x=0, y=0)
         login_btn.place(x=120, y=400)
 
+        # Set windows to none.
+        self.signup_window=None
+
     def open_signup_window(self):
-        self.open_signup_window=tk.Toplevel(self.master)
-        SignupWindow(self.open_signup_window)
+        # Ensure the user cannot keep opening duplicates.
+        if self.signup_window is not None and self.signup_window.winfo_exists():
+            return
+        self.signup_window=tk.Toplevel(self.master)
+        SignupWindow(self.signup_window)
 
 
 class SignupWindow:
@@ -195,19 +224,19 @@ class SignupWindow:
             if first_name and last_name and username and password and \
                 confirm_password and birthdate:
                 if not first_name.isalpha() or not last_name.isalpha():
-                    messagebox.showerror("Invalid first name/last " +
+                    mb.showerror("Invalid first name/last " +
                                         "name", "Please only enter letters " +
-                                        "for first name and last name.")
+                                        "for first name and last name.", parent=self.master)
                 elif not username.isalnum():
-                    messagebox.showerror("Invalid username", "Please only " +
-                                        "enter numbers or letters for username.")
+                    mb.showerror("Invalid username", "Please only " +
+                                        "enter numbers or letters for username.", parent=self.master)
                 elif os.path.exists(f"{username}_info.txt"):
-                    messagebox.showerror("Invalid username", "This username " +
+                    mb.showerror("Invalid username", "This username " +
                                          "already exists.\nPlease enter a " +
-                                         "different username.")
+                                         "different username.", parent=self.master)
                 elif password != confirm_password:
-                    messagebox.showerror("Invalid password", "Please check " +
-                                        "that your passwords match.")
+                    mb.showerror("Invalid password", "Please check " +
+                                        "that your passwords match.", parent=self.master)
                 elif birthdate:
                     # Validate the birthdate entry.
                     try:
@@ -222,28 +251,28 @@ class SignupWindow:
                             (birthdate.month, birthdate.day)
                         age=difference - today_precedes_dob
                         if age <= 0 or age >=99:
-                            messagebox.showerror("Invalid input", "Please enter a valid "
-                                                "birthdate (dd/mm/yyyy)")
+                            mb.showerror("Invalid input", "Please enter a valid "
+                                                "birthdate (dd/mm/yyyy)", parent=self.master)
                             return
                         elif age < 15 or age > 24:
-                            age_maybe = messagebox.askquestion("Note", "Please note that "
+                            age_maybe = mb.askquestion("Note", "Please note that "
                                                             "this application is "
                                                             "primarily designed for "
                                                             "ages 15-24, and may not "
                                                             "meet your individual "
                                                             "needs.\n\nAre you sure "
-                                                            "you want to continue?")
+                                                            "you want to continue?", parent=self.master)
                             if age_maybe == "no":
                                 return False
                         else:
-                            messagebox.showinfo("Note", "Please enjoy this applications "
+                            mb.showinfo("Note", "Please enjoy this applications "
                                                 "features and resources which are "
                                                 "tailored specifically for ages 15-24 "
-                                                "like yourself.")
+                                                "like yourself.", parent=self.master)
                     except ValueError:
                         # Show an error if the date format is incorrect.
-                        messagebox.showerror("Invalid input", "Please enter a valid "
-                                            "birthdate (dd/mm/yyyy)")
+                        mb.showerror("Invalid input", "Please enter a valid "
+                                            "birthdate (dd/mm/yyyy)", parent=self.master)
                         return
                     
                     # Create an individual file for the user.
@@ -265,16 +294,17 @@ class SignupWindow:
                                  "Birthdate": birthdate
                                  }
 
-                    messagebox.showinfo("Successful", "Sign up successful." +
-                                        f"\nWelcome {username}")
+                    mb.showinfo("Successful", "Sign up successful." +
+                                        f"\nWelcome {username}", parent=self.master)
                     self.master.destroy()
 
                     NewWindow(tk.Tk(), user_info)
 
             else:
-                messagebox.showerror("Invalid input", "Please enter all fields")
+                mb.showerror("Invalid input", "Please enter all fields", parent=self.master)
                         
         self.master=master
+        self.master.attributes('-topmost', True)
         master.title("Signup")
         master.geometry("350x450")
         master.resizable(False, False)
@@ -338,7 +368,13 @@ class SignupWindow:
 
         canvas.place(x=0, y=0)
 
+        # Set window to none.
+        self.login_window=None
+
     def open_login_window(self):
+        # Ensure the user cannot keep opening duplicates.
+        if self.login_window is not None and self.login_window.winfo_exists():
+            return
         self.login_window=tk.Toplevel(self.master)
         LoginWindow(self.login_window)
 
@@ -413,7 +449,7 @@ class NewWindow:
 
     def checkexit(self):
         """Function to confirm user wants to exit application."""
-        response=messagebox.askquestion("Exit Programme?","Your "
+        response=mb.askquestion("Exit Programme?","Your "
                                               + "progress will NOT be saved."
                                               + "\nAre you sure you want to "
                                               + "exit the program?",
@@ -520,7 +556,7 @@ class QuizPage(tk.Frame):
     
     def choose_behaviour(self):
         self.chosen_quiz = 'behaviour_quiz.json'
-        self.open_quiz(self.chosen_quizself.user_info)
+        self.open_quiz(self.chosen_quiz, self.user_info)
 
     def choose_emergency(self):
         self.chosen_quiz = 'emergency_quiz.json'
@@ -557,9 +593,10 @@ class Quiz(tk.Toplevel):
         quiz_name = chosen_quiz.split("_quiz.json")[0]
         self.title(f"{quiz_name} quiz")
 
-        # Saving variables from other classes to this class.
+        # Saving external variables to this class to use across functions.
         self.question, self.options, self.answer = quiz_data
         self.user_info = user_info
+        self.quiz_name = quiz_name
 
         # set question number to 0
         self.q_no=0
@@ -577,7 +614,7 @@ class Quiz(tk.Toplevel):
         # Display buttons.
         next_button = Button(self, text="Next",command=self.next_btn,
         width=10,bg="blue",fg="white",font=("ariel",16,"bold"))
-        quit_button = Button(self, text="Quit", command=self.destroy,
+        exit_button = Button(self, text="Exit", command=self.checkexit,
         width=5,bg="black", fg="white",font=("ariel",16," bold"))
 
         # Function.
@@ -586,7 +623,7 @@ class Quiz(tk.Toplevel):
 
         # Place buttons.
         next_button.place(x=350,y=380)
-        quit_button.place(x=700,y=50)
+        exit_button.place(x=700,y=50)
         
         # no of questions
         self.data_size=len(self.question)
@@ -604,14 +641,14 @@ class Quiz(tk.Toplevel):
         # calcultaes the percentage of correct answers.
         score = int(self.correct / self.data_size * 100)
         result = f"Score: {score}%"
-        print(f"{score}\n{correct}\n{wrong}") # Debug statement
+        print(f"{quiz_results}") # Debug statement
         
-        messagebox.showinfo("Quiz complete!\nResult", f"{result}\n{correct}\n{wrong}")
+        mb.showinfo("Quiz complete!\nResult", f"{result}\n{correct}\n{wrong}", parent=self.master)
 
         # Save users results to their file.
         today=date.today()
         quiz_results=(
-            f"\nQuiz results ({today}):\n"
+            f"\n{self.quiz_name} Quiz results ({today}):\n"
             f"Score: {score}\n"
             f"{correct}\n"
             f"{wrong}"
@@ -650,7 +687,7 @@ class Quiz(tk.Toplevel):
     def next_btn(self):
         """Function to check if the answer is correct, then increase question count by 1."""
         
-        if self.opt_selected:
+        if self.opt_selected.get() >=1:
             # Check if the answer is correct, then increment correct by 1.
             if self.check_ans(self.q_no, self.answer):
                 self.correct += 1
@@ -671,7 +708,7 @@ class Quiz(tk.Toplevel):
                 self.display_question(self.question)
                 self.display_options(self.options)
         else:
-            messagebox.showerror("Invalid input", "Please select an option.")
+            mb.showerror("Invalid input", "Please select an option.", parent=self.master)
 
     # This method shows the radio buttons to select the Question
     # on the screen at the specified position. It also returns a
@@ -699,6 +736,16 @@ class Quiz(tk.Toplevel):
         
         # return the radio buttons
         return q_list
+    
+    def checkexit(self):
+        """Function to confirm user wants to exit quiz."""
+        response=mb.askquestion("Exit Quiz?","Your "
+                                              + "progress will NOT be saved."
+                                              + "\nAre you sure you want to "
+                                              + "exit the quiz?",
+                                            icon='warning', parent=self.master)
+        if response == "yes":
+            self.destroy()
 
 
 class TestPage(tk.Frame):
@@ -711,8 +758,8 @@ class TestPage(tk.Frame):
                            text="In test mode, there are a total of 25 "
                            "quizzes which you are tested on. \nThese cover "
                            "general road safety test questoins. Test "
-                           "conditions apply. \nMeaning progress cannot be "
-                           "resumed once started and there is no indication "
+                           "conditions apply. \nMeaning there is no "
+                           "feedback provided and there is no indication "
                            "\nof correct/incorrect answers until completion. "
                            "\n\nBENEFITS:\n- Reinforce learning through "
                            "quizzes\n- Gain confidence in road safety "
@@ -742,7 +789,7 @@ class ProfilePage(tk.Frame):
             """Function to sign the user out and redirect them to the first 
             window.
             """
-            response = messagebox.askquestion("Signout?","Your progress will "
+            response = mb.askquestion("Signout?","Your progress will "
                                                 "NOT be saved.\nAre you sure you want "
                                                 "to signout?",
             icon = 'warning', master=self.master)
