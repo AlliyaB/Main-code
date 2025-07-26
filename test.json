@@ -1,0 +1,185 @@
+
+{
+    "question": [
+      "Q1.At night, what must a towed vehicle have at the back of it?",
+      "Q2. You are waiting at a railway level crossing and the red lights continue to flash after the train has passed. What should you do?",
+      "Q3. When passing a horse and rider, what should you do?",
+      "Q4. What is the safest way to carry goods inside a vehicle?",
+      "Q5. If you are driving at night with your vehicle headlights on high beam, when MUST you dip them?",
+      "Q6. What is the speed limit for vehicles passing a school bus that has stopped to let children on or off?",
+      "Q7.What is the closest distance your vehicle may be parked to a vehicle entrance?",
+      "Q8. What rule should you use to judge a safe following distance in wet or frosty conditions if driving a car?",
+      "Q9. What is the minimum tread depth required for car tyres?",
+      "Q10. When traffic is merging, what is a good rule to follow?",
+      "Q11. You are driving on a country road at night when your vehicle headlights suddenly go out. What is the safest thing to do?",
+      "Q12. When MUST you dip the headlights on your vehicle?",
+      "Q13. You are driving in a 100 km/h speed area and you see an accident sign. What speed must you slow down to?",
+      "Q14. What is the maximum legal speed for a car towing a trailer on the open road?",
+      "Q15. For the purpose of applying the give way rule, entrance ways into public car parks should be treated as:",
+      "Q16. When driving on an unlaned road, your vehicle should be positioned:",
+      "Q17. What must you do if glass falls on to the road from your vehicle?",
+      "Q18. What is the maximum distance a load may extend in front of a car?",
+      "Q19. What will happen if you have a front tyre blow out?",
+      "Q20. If you tow another vehicle, what is the maximum distance allowed between the two vehicles?",
+      "Q21: What is the maximum distance a load may overhang your vehicle behind the rear axle?",
+      "Q22. What should you do before any modification is carried out on your vehicle?",
+      "Q23. What does an orange traffic symbol mean?",
+      "Q24. When approaching a railway level crossing, what should you do?",
+      "Q25. What does an accident sign mean?"
+    ],
+    "answer": [
+      4,
+      2,
+      2,
+      4,
+      3,
+      1,
+      3,
+      4,
+      2,
+      3,
+      4,
+      4,
+      4,
+      3,
+      3,
+      4,
+      2,
+      3,
+      4,
+      2,
+      2,
+      4,
+      3,
+      1,
+      4
+    ],
+    "options": [
+  
+      ["A white flag",
+      "Reflective tape",
+      "A white light",
+      "*A red light"
+      ],
+      ["Drive on carefully",
+        "*Stay stopped until the lights stop flashing",
+        "Check both ways and then drive on quickly",
+        "Count to 15 and then drive on"
+      ],
+      ["Sound your horn on approach",
+        "*Slow down and give plenty of room",
+        "Increase speed to pass quickly",
+        "Cross the centreline to pass"
+      ],
+      ["On the passenger seat",
+        "On the floor",
+        "On the back seat",
+        "*Somewhere secure"
+      ],
+      ["At all intersections",
+        "In a shopping area",
+        "*For a police officer directing traffics",
+        "In a township"
+      ],
+      ["*20km/h",
+        "30km/h",
+        "40km/h",
+        "50km/h"
+      ],
+      ["0.5 m",
+        "0.75m",
+        "*1.00m",
+        "1.25m"
+      ],
+      ["The 1-second rule",
+        "The 2-second rule",
+        "The 3-second rule",
+        "*The 4-second rule"
+      ],
+      ["2.0mm",
+        "*1.5mm",
+        "1.0mm",
+        "0.5mm"
+      ],
+      ["Slow down to 40km/h",
+        "Speed up to make room behind",
+        "*Let a vehicle from the other lane go first, and then go",
+        "Let 2 vehicles in and go"
+      ],
+      ["Carry on driving with your park lights on",
+        "Carry on driving but keep to the far left",
+        "Carry on driving with your vehicle's interior lights on",
+        "*Slow down and move off the road to stop. Then turn your hazard lights on"
+      ],
+      ["When coming up to an intersection",
+        "When driving in city shopping areas",
+        "When driving on a winding road",
+        "*When you are following others"
+      ],
+      ["75km/h",
+        "50km/h",
+        "35km/h",
+        "*20km/h"
+      ],
+      ["70km/h",
+        "80km/h",
+        "*90km/h",
+        "100km/h"
+      ],
+      ["As turning bays",
+        "As pedestrian crossings",
+        "*As intersections",
+        "As residential driveways"
+      ],
+      ["1 metre from the centre",
+        "1 metre from the left kerb",
+        "Close to the centre of the road",
+        "*As close to the left side of the road as possible"
+      ],
+      ["Sweep it up within 2 hours",
+        "*Sweep it up straight away if you can do so safely",
+        "Sweep it up within 24 hours",
+        "Tell a police officer"
+      ],
+      ["2 metres forward of the front edge of the front seat",
+        "4 metres forward of the front edge of the front seat",
+        "*3 metres forward of the front edge of the front seat",
+        "2.5 metres forward of the front edge of the front seat"
+      ],
+      ["The car will slowly come to a stop",
+        "The rear will sway from side to side",
+        "The car will always pull towards the left",
+        "*The car will pull towards the side of the blowout"
+      ],
+      ["2m",
+        "*4m",
+        "The length of the vehicle you are driving",
+        "The length of the vehicle being towed"
+      ],
+      ["2m",
+        "*4m",
+        "1.25",
+        "1.50m"
+      ],
+      ["Ask someone to check whether the modifications are safe",
+        "If you can do it yourself you dont need to do anything",
+        "Make sure a trained professional is carrying out the modifications",
+        "*Check with an approved WoF inspector that the modifications are legal"
+      ],
+      ["Drive on before the signal changes to red",
+        "Drive on because the signal will turn green",
+        "*Stop if you can do so safely",
+        "Stop only if traffic is in the way"
+      ],
+      ["*Slow down so that you can look both ways before crossing",
+        "Stop before driving over the crossing",
+        "Slow down and sound your horn before crossing",
+        "Look right for trains"
+      ],
+      ["Others have crashed here in the past",
+        "There has been a crash-slow down to 30km/h",
+        "There has been a crash-stop immediately",
+        "*Slow down to 20km/h until you have passed the crash"
+      ]
+    ]
+  }

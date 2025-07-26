@@ -75,28 +75,28 @@ class MainWindow:
         self.signup_window = None
 
     def open_login_window(self):
-        # Destroy signup window if it exists
+        if self.login_window is not None and self.login_window.winfo_exists():
+            return
+        # Destroy signup window if open
         if self.signup_window is not None and self.signup_window.winfo_exists():
             self.signup_window.destroy()
             self.signup_window = None
 
-        # Ensure the user cannot keep opening duplicates.
-        if self.login_window is not None and self.login_window.winfo_exists():
-            return
-        self.login_window=tk.Toplevel(self.master)
-        LoginWindow(self.login_window)
+        self.login_window = tk.Toplevel(self.master)
+        self.login_window.geometry("+800+150")
+        LoginWindow(self.login_window, self)
 
     def open_signup_window(self):
-        # Destroy login window if it exists
+        if self.signup_window is not None and self.signup_window.winfo_exists():
+            return
+        # Destroy login window if open
         if self.login_window is not None and self.login_window.winfo_exists():
             self.login_window.destroy()
             self.login_window = None
 
-        # Ensure the user cannot keep opening duplicates.
-        if self.signup_window is not None and self.signup_window.winfo_exists():
-            return
-        self.signup_window=tk.Toplevel(self.master)
-        SignupWindow(self.signup_window)
+        self.signup_window = tk.Toplevel(self.master)
+        self.signup_window.geometry("+800+150")
+        SignupWindow(self.signup_window, self)
 
     def checkexit(self):
         """Function to confirm user wants to exit application."""
@@ -110,7 +110,7 @@ class MainWindow:
 
 
 class LoginWindow:
-    def __init__(self, master):
+    def __init__(self, master, app):
         """Function to initialise window."""
 
         def login():
@@ -155,8 +155,7 @@ class LoginWindow:
         master.geometry("350x450")
         master.resizable(False, False)
         master.configure(background="lemon chiffon")
-
-        self.open_login_window = False
+        self.app = app
 
         canvas=Canvas(master,
                         height=70,
@@ -166,7 +165,7 @@ class LoginWindow:
         # Create labels/buttons for title and user navigation.
         tk.Label(master, text="Log in:", font=("Helvetica", 15), fg="white", bg="black").place(x=10, y=24)
         tk.Label(master, text="Log into your account", font=("Helvetica", 10), fg="white", bg="black").place(x=82, y=30)
-        tk.Button(master, text="Sign up", width=11, height=2, font=("Helvetica", 10, "bold"), command=self.open_signup_window).place(x=240, y=15)
+        tk.Button(master, text="Sign up", width=11, height=2, font=("Helvetica", 10, "bold"), command=self.switch_to_signup).place(x=240, y=15)
         login_btn=tk.Button(master, text="Log in", font=("Helvetica", 10, "bold"), width=11, height=2, fg="black", bg="gold", command=login)
 
         # Declaring name and password as string variables.
@@ -196,19 +195,23 @@ class LoginWindow:
         canvas.place(x=0, y=0)
         login_btn.place(x=120, y=400)
 
-        # Set windows to none.
-        self.signup_window=None
+        # When the login window is closed manually.
+        master.protocol("WM_DELETE_WINDOW", self.on_close)
 
-    def open_signup_window(self):
-        # Ensure the user cannot keep opening duplicates.
-        if self.signup_window is not None and self.signup_window.winfo_exists():
-            return
-        self.signup_window=tk.Toplevel(self.master)
-        SignupWindow(self.signup_window)
+    def switch_to_signup(self):
+        """Function to close current window and open signup window."""
+        self.master.destroy()
+        self.app.login_window = None
+        self.app.open_signup_window()
+
+    def on_close(self):
+        """Function to close this window."""
+        self.app.login_window = None
+        self.master.destroy()
 
 
 class SignupWindow:
-    def __init__(self, master):
+    def __init__(self, master, app):
         """Initialise the signup window."""
         def signup():
             """Function to validate user input when signing up."""
@@ -309,6 +312,7 @@ class SignupWindow:
         master.geometry("350x450")
         master.resizable(False, False)
         master.configure(background="lemon chiffon")
+        self.app = app
 
         # Print today's date, neccassary for calculating the users age.
         # Print todays date.
@@ -324,7 +328,7 @@ class SignupWindow:
         # Create labels/buttons for title and user navigation.
         tk.Label(master, text="Sign up:", font=("Helvetica", 15), fg="white", bg="black").place(x=10, y=24)
         tk.Label(master, text="Create an account", font=("Helvetica", 10), fg="white", bg="black").place(x=82, y=30)
-        tk.Button(master, text="Log in", width=11, height=2, font=("Helvetica", 10, "bold"), command=self.open_login_window).place(x=240, y=15)
+        tk.Button(master, text="Log in", width=11, height=2, font=("Helvetica", 10, "bold"), command=self.switch_to_login).place(x=240, y=15)
         tk.Button(master, text="Sign up", font=("Helvetica", 10, "bold"), width=11, height=2, fg="black", bg="gold", command=signup).place(x=120, y=400)
 
         # Declaring name and password as string variables.
@@ -368,15 +372,19 @@ class SignupWindow:
 
         canvas.place(x=0, y=0)
 
-        # Set window to none.
-        self.login_window=None
+        # When the signup window is closed manually
+        master.protocol("WM_DELETE_WINDOW", self.on_close)
 
-    def open_login_window(self):
-        # Ensure the user cannot keep opening duplicates.
-        if self.login_window is not None and self.login_window.winfo_exists():
-            return
-        self.login_window=tk.Toplevel(self.master)
-        LoginWindow(self.login_window)
+    def switch_to_login(self):
+        """Function to close this window and open new login window."""
+        self.master.destroy()
+        self.app.signup_window = None
+        self.app.open_login_window()
+
+    def on_close(self):
+        """Function to close this window."""
+        self.app.signup_window = None
+        self.master.destroy()
 
 
 class NewWindow:
@@ -432,7 +440,7 @@ class NewWindow:
         for F in (HomePage, AboutPage, QuizPage, TestPage, ProfilePage, HelpPage):
             page_name=F.__name__
             # Pass user_info to profile page.
-            if page_name == "ProfilePage" or page_name=="QuizPage":
+            if page_name == "ProfilePage" or page_name=="QuizPage" or page_name=="TestPage":
                 frame = F(master=container, controller=self, user_info=self.user_info, new_window=self.master)
             else:
                 frame=F(master=container, controller=self)
@@ -641,9 +649,8 @@ class Quiz(tk.Toplevel):
         # calcultaes the percentage of correct answers.
         score = int(self.correct / self.data_size * 100)
         result = f"Score: {score}%"
-        print(f"{quiz_results}") # Debug statement
         
-        mb.showinfo("Quiz complete!\nResult", f"{result}\n{correct}\n{wrong}", parent=self.master)
+        mb.showinfo("Quiz complete!\nResult", f"{result}\n{correct}\n{wrong}", parent=self)
 
         # Save users results to their file.
         today=date.today()
@@ -708,7 +715,7 @@ class Quiz(tk.Toplevel):
                 self.display_question(self.question)
                 self.display_options(self.options)
         else:
-            mb.showerror("Invalid input", "Please select an option.", parent=self.master)
+            mb.showerror("Invalid input", "Please select an option.", parent=self)
 
     # This method shows the radio buttons to select the Question
     # on the screen at the specified position. It also returns a
@@ -743,17 +750,21 @@ class Quiz(tk.Toplevel):
                                               + "progress will NOT be saved."
                                               + "\nAre you sure you want to "
                                               + "exit the quiz?",
-                                            icon='warning', parent=self.master)
+                                            icon='warning', parent=self)
         if response == "yes":
             self.destroy()
 
 
 class TestPage(tk.Frame):
-    def __init__(self, master, controller):
+    def __init__(self, master, controller=None, user_info=None, new_window=None):
         super().__init__(master)
         test_title=tk.Label(self, text="Test", font=("Helvetica", 42), bg="lemon chiffon")
         test_title.place(x=50, y=50)
         
+        self.new_window = new_window
+        self.controller = controller
+        self.user_info = user_info or {}
+
         intro_lbl=tk.Label(self, 
                            text="In test mode, there are a total of 25 "
                            "quizzes which you are tested on. \nThese cover "
@@ -775,10 +786,192 @@ class TestPage(tk.Frame):
         intro_lbl.place(x=50, y=150)
 
         # Create buttons for different quiz options.
-        thest_btn=tk.Button(self, text="Start now")
+        test_btn=tk.Button(self, text="Start now", command=self.choose_test)
 
         # Place buttons.
-        thest_btn.place(x=700, y=200)
+        test_btn.place(x=700, y=200)
+
+    def choose_test(self):
+        self.chosen_test = 'test.json'
+        self.open_test(self.chosen_test, self.user_info)
+
+    def open_test(self, chosen_test, user_info):
+        # Get the data from the json file.
+        with open(chosen_test) as f:
+            data = json.load(f)
+
+        # Set the question, options, and answer.
+        self.question = (data['question'])
+        self.options = (data['options'])
+        self.answer = (data[ 'answer'])
+
+        # Create the top level quiz window.
+        Test(self.master, (self.question, self.options, self.answer), user_info)
+
+    def get_test_data(self):
+        """Function to get the quiz data for generation."""
+        return self.question, self.options, self.answer
+
+
+class Test(tk.Toplevel):
+    """Class to define the components of the self."""
+    def __init__(self, master, test_data, user_info):
+        super().__init__(master)
+        """Function called when new object of class is intitialised. Set 
+        question count to 0 and initilise all other functions for content."""
+        self.geometry("800x450")
+        self.title("Test")
+
+        # Saving external variables to this class to use across functions.
+        self.question, self.options, self.answer = test_data
+        self.user_info = user_info
+
+        # set question number to 0
+        self.q_no=0
+        # Hold an integer value to select an option in a question.
+        self.opt_selected = tk.IntVar(self, value=0)
+        # Set options to zero.
+        self.opt_selected.set(0)
+        # Use radio button to display current question and display options.
+        self.opts=self.radio_buttons()
+        # display current question options, buttons, title, and display questions.
+        title = Label(self, text="Test", width=50, bg="green",fg="white", font=("ariel", 20, "bold"))
+        title.place(x=0, y=2)
+
+        # Display buttons.
+        next_button = Button(self, text="Next",command=self.next_btn,
+        width=10,bg="blue",fg="white",font=("ariel",16,"bold"))
+        exit_button = Button(self, text="Exit", command=self.checkexit,
+        width=5,bg="black", fg="white",font=("ariel",16," bold"))
+
+        # Function.
+        self.display_options(self.options)
+        self.display_question(self.question)
+
+        # Place buttons.
+        next_button.place(x=350,y=380)
+        exit_button.place(x=700,y=50)
+        
+        # no of questions
+        self.data_size=len(self.question)
+        
+        # keep a counter of correct answers
+        self.correct=0
+
+    def display_result(self, user_info):
+        """Function to calculate, display, and save user results."""
+        # Calculate how many questions user answered incorrectly.
+        wrong_count = self.data_size - self.correct
+        correct = f"Correct: {self.correct}"
+        wrong = f"Wrong: {wrong_count}"
+        
+        # calcultaes the percentage of correct answers.
+        score = int(self.correct / self.data_size * 100)
+        result = f"Score: {score}%"
+        
+        mb.showinfo("Test complete!\nResult", f"{result}\n{correct}\n{wrong}", parent=self)
+
+        # Save users results to their file.
+        today=date.today()
+        test_results=(
+            f"\nTest results ({today}):\n"
+            f"Score: {score}\n"
+            f"{correct}\n"
+            f"{wrong}"
+        )
+
+        # Get username.
+        username=user_info.get('Username', '')
+        with open(f"{username}_info.txt", "a") as file:
+                        file.write(f"\n{test_results}\n")
+
+    def check_ans(self, q_no, answer):
+        """Function to check the answer after user has clicked next."""
+        # Check if selected option is correct.
+        if self.opt_selected.get() == answer[q_no]:
+            return self.opt_selected.get() == answer[q_no]
+        
+    def display_options(self, options):
+        """Function to reset question options for next question."""
+        val=0
+        # Deselect options.
+        self.opt_selected.set(0)
+        
+        # Loop over options to display for radio button text.
+        for option in options[self.q_no]:
+            self.opts[val]['text']=option
+            val+=1
+
+        print("Code is inside the display_options function", val)
+        
+    def display_question(self, question):
+            # Show and set the Question properties
+            q_no = Label(self, text=question[self.q_no], width=60,
+            font=( 'ariel' ,16, 'bold' ), anchor= 'w' )
+            q_no.place(x=70, y=100)
+
+    def next_btn(self):
+        """Function to check if the answer is correct, then increase question count by 1."""
+        
+        if self.opt_selected.get() >=1:
+            # Check if the answer is correct, then increment correct by 1.
+            if self.check_ans(self.q_no, self.answer):
+                self.correct += 1
+            
+            # Moves to next Question by incrementing the q_no counter
+            self.q_no += 1
+            
+            # checks if the q_no size is equal to the data size
+            if self.q_no==self.data_size:
+                
+                
+                # if it is correct then it displays the score
+                self.display_result(self.user_info)
+                # destroys the self
+                self.destroy()
+            else:
+                # shows the next question
+                self.display_question(self.question)
+                self.display_options(self.options)
+        else:
+            mb.showerror("Invalid input", "Please select an option.", parent=self)
+
+    # This method shows the radio buttons to select the Question
+    # on the screen at the specified position. It also returns a
+    # list of radio button which are later used to add the options to
+    # them.
+    def radio_buttons(self):
+        
+        # initialize the list with an empty list of options and position first option.
+        q_list = []
+        y_pos = 150
+
+        # adding the options to the list
+        while len(q_list) < 4:
+            
+            # setting the radio button properties
+            radio_btn = Radiobutton(self, text="", variable=self.opt_selected,
+            value = len(q_list)+1, font = ("ariel",14))
+            
+            # Add button to the list then place it.
+            q_list.append(radio_btn)
+            radio_btn.place(x = 100, y = y_pos)
+            
+            # incrementing the y-axis position by 40
+            y_pos += 40
+        
+        # return the radio buttons
+        return q_list
+    
+    def checkexit(self):
+        """Function to confirm user wants to exit quiz."""
+        response=mb.askquestion("Exit Quiz?","Your "
+                                              + "progress will NOT be saved."
+                                              + "\nAre you sure you want to "
+                                              + "exit the quiz?",
+                                            icon='warning', parent=self)
+        if response == "yes":
+            self.destroy()
 
 
 class ProfilePage(tk.Frame):
