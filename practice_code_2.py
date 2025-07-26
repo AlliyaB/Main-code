@@ -284,7 +284,7 @@ class SignupWindow:
                                    f"First name: {first_name}\n"
                                    f"Last name: {last_name}\n"
                                    f"Password: {password}\n"
-                                   f"Birthdate: {birthdate}")
+                                   f"Birthdate: {birthdate.strftime('%d/%m/%Y')}")
                         
                     #Debugging statment
                     print(age)
@@ -294,7 +294,7 @@ class SignupWindow:
                                  "Username": username,
                                  "First name": first_name,
                                  "Last name": last_name,
-                                 "Birthdate": birthdate
+                                 "Birthdate": birthdate.strftime('%d/%m/%Y')
                                  }
 
                     mb.showinfo("Successful", "Sign up successful." +
@@ -506,8 +506,9 @@ class HomePage(tk.Frame):
 class AboutPage(tk.Frame):
     def __init__(self, master, controller):
         super().__init__(master)
-        label=tk.Label(self, text="This is About", font=("Helvetica", 16))
-        label.pack(pady=20)
+        
+        about_title=tk.Label(self, text="About", font=("Helvetica", 42), bg="lemon chiffon")
+        about_title.place(x=50, y=50)
 
 
 class QuizPage(tk.Frame):
@@ -536,7 +537,8 @@ class QuizPage(tk.Frame):
                            "percentage will be calculated.  \nFeel free to "
                            "try more quizzes or test how much you know!", 
                            bg="lemon chiffon", 
-                           justify="left")
+                           justify="left", 
+                           font=("ariel", 11))
         intro_lbl.place(x=50, y=150)
 
         # Create buttons for different quiz options.
@@ -559,7 +561,6 @@ class QuizPage(tk.Frame):
 
     def choose_theory(self):
         self.chosen_quiz = 'theory_quiz.json'
-        print("code got to here")              #Debugging statement.
         self.open_quiz(self.chosen_quiz, self.user_info)
     
     def choose_behaviour(self):
@@ -582,13 +583,14 @@ class QuizPage(tk.Frame):
         self.question = (data['question'])
         self.options = (data['options'])
         self.answer = (data[ 'answer'])
+        self.feedback = (data[ 'feedback'])
 
         # Create the top level quiz window.
-        Quiz(self.master, (self.question, self.options, self.answer), chosen_quiz, user_info)
+        Quiz(self.master, (self.question, self.options, self.answer, self.feedback), chosen_quiz, user_info)
 
     def get_quiz_data(self):
         """Function to get the quiz data for generation."""
-        return self.question, self.options, self.answer
+        return self.question, self.options, self.answer, self.feedback
     
 class Quiz(tk.Toplevel):
     """Class to define the components of the self."""
@@ -602,7 +604,7 @@ class Quiz(tk.Toplevel):
         self.title(f"{quiz_name} quiz")
 
         # Saving external variables to this class to use across functions.
-        self.question, self.options, self.answer = quiz_data
+        self.question, self.options, self.answer, self.feedback = quiz_data
         self.user_info = user_info
         self.quiz_name = quiz_name
 
@@ -615,23 +617,33 @@ class Quiz(tk.Toplevel):
         # Use radio button to display current question and display options.
         self.opts=self.radio_buttons()
         # display current question options, buttons, title, and display questions.
-        title = Label(self, text=f"{quiz_name} QUIZ",
-        width=50, bg="green",fg="white", font=("ariel", 20, "bold"))
+        title = Label(self, text=f"{quiz_name} quiz",
+        width=50, bg="black", fg="white", font=("ariel", 20, "bold"))
         title.place(x=0, y=2)
+        # Create a label for answer indication. Will be used in next_btn().
+        self.answer_lbl=Label(self, text="", font=("ariel", 20, "bold"))
+        self.answer_lbl.place(x=520,y=380)
 
-        # Display buttons.
+        # Display buttons and labels.
         next_button = Button(self, text="Next",command=self.next_btn,
-        width=10,bg="blue",fg="white",font=("ariel",16,"bold"))
-        exit_button = Button(self, text="Exit", command=self.checkexit,
+        width=10,bg="gold", font=("ariel", 16, "bold"))
+        self.exit_button = Button(self, text="Exit", command=self.checkexit,
         width=5,bg="black", fg="white",font=("ariel",16," bold"))
+        self.q_no_label = Label(self, text="", width=60,
+                        font=('ariel', 16, 'bold'),
+                        anchor='w', justify=LEFT)
 
         # Function.
         self.display_options(self.options)
         self.display_question(self.question)
 
-        # Place buttons.
-        next_button.place(x=350,y=380)
-        exit_button.place(x=700,y=50)
+        # Place buttons/labels.
+        next_button.place(x=350,y=400)
+        self.exit_button.place(x=700,y=50)
+        self.q_no_label.place(x=70, y=80)
+
+        # Ensure the button stays on top of the question label.
+        self.exit_button.lift()
         
         # no of questions
         self.data_size=len(self.question)
@@ -653,9 +665,10 @@ class Quiz(tk.Toplevel):
         mb.showinfo("Quiz complete!\nResult", f"{result}\n{correct}\n{wrong}", parent=self)
 
         # Save users results to their file.
-        today=date.today()
+        today=datetime.today()
+        formatted_date = today.strftime("%d/%m/%Y %H:%M")
         quiz_results=(
-            f"\n{self.quiz_name} Quiz results ({today}):\n"
+            f"\n{self.quiz_name} Quiz results ({formatted_date}):\n"
             f"Score: {score}\n"
             f"{correct}\n"
             f"{wrong}"
@@ -677,19 +690,17 @@ class Quiz(tk.Toplevel):
         val=0
         # Deselect options.
         self.opt_selected.set(0)
+        # Ensure the question label doesn't cover the button.
+        self.exit_button.lift()
         
         # Loop over options to display for radio button text.
         for option in options[self.q_no]:
             self.opts[val]['text']=option
             val+=1
-
-        print("Code is inside the display_options function", val)
         
     def display_question(self, question):
-            # Show and set the Question properties
-            q_no = Label(self, text=question[self.q_no], width=60,
-            font=( 'ariel' ,16, 'bold' ), anchor= 'w' )
-            q_no.place(x=70, y=100)
+            """Function to update the question label."""
+            self.q_no_label.config(text=question[self.q_no])
 
     def next_btn(self):
         """Function to check if the answer is correct, then increase question count by 1."""
@@ -698,13 +709,17 @@ class Quiz(tk.Toplevel):
             # Check if the answer is correct, then increment correct by 1.
             if self.check_ans(self.q_no, self.answer):
                 self.correct += 1
+                self.answer_lbl.config(text="Correct!", fg="green")
+
+            else:
+                self.answer_lbl.config(text="Incorrect", fg="red")
+                self.display_feedback(self.feedback)
             
             # Moves to next Question by incrementing the q_no counter
             self.q_no += 1
             
             # checks if the q_no size is equal to the data size
             if self.q_no==self.data_size:
-                
                 
                 # if it is correct then it displays the score
                 self.display_result(self.user_info)
@@ -714,8 +729,15 @@ class Quiz(tk.Toplevel):
                 # shows the next question
                 self.display_question(self.question)
                 self.display_options(self.options)
+                # Clear answer indication.
+                self.after(700, lambda: self.answer_lbl.config(text=""))
         else:
             mb.showerror("Invalid input", "Please select an option.", parent=self)
+
+    def display_feedback(self, feedback):
+        """Function to display feedback when user answers incorrectly."""
+        feedback_txt=feedback[self.q_no]
+        mb.showinfo("Feedback", feedback_txt, parent=self)
 
     # This method shows the radio buttons to select the Question
     # on the screen at the specified position. It also returns a
@@ -725,21 +747,21 @@ class Quiz(tk.Toplevel):
         
         # initialize the list with an empty list of options and position first option.
         q_list = []
-        y_pos = 150
+        y_pos = 160
 
         # adding the options to the list
         while len(q_list) < 4:
             
             # setting the radio button properties
             radio_btn = Radiobutton(self, text="", variable=self.opt_selected,
-            value = len(q_list)+1, font = ("ariel",14))
+            value = len(q_list)+1, font = ("ariel",14), justify=LEFT)
             
             # Add button to the list then place it.
             q_list.append(radio_btn)
             radio_btn.place(x = 100, y = y_pos)
             
             # incrementing the y-axis position by 40
-            y_pos += 40
+            y_pos += 52
         
         # return the radio buttons
         return q_list
@@ -782,7 +804,8 @@ class TestPage(tk.Frame):
                            "try again and improve your score or "
                            "learn more through quizzes!",
                            bg="lemon chiffon", 
-                           justify="left")
+                           justify="left",
+                           font=("ariel", 11))
         intro_lbl.place(x=50, y=150)
 
         # Create buttons for different quiz options.
@@ -826,7 +849,7 @@ class Test(tk.Toplevel):
         self.question, self.options, self.answer = test_data
         self.user_info = user_info
 
-        # set question number to 0
+        # set question number to 0.
         self.q_no=0
         # Hold an integer value to select an option in a question.
         self.opt_selected = tk.IntVar(self, value=0)
@@ -835,22 +858,28 @@ class Test(tk.Toplevel):
         # Use radio button to display current question and display options.
         self.opts=self.radio_buttons()
         # display current question options, buttons, title, and display questions.
-        title = Label(self, text="Test", width=50, bg="green",fg="white", font=("ariel", 20, "bold"))
+        title = Label(self, text="Test", width=50, bg="black",fg="white", font=("ariel", 20, "bold"))
         title.place(x=0, y=2)
 
         # Display buttons.
         next_button = Button(self, text="Next",command=self.next_btn,
-        width=10,bg="blue",fg="white",font=("ariel",16,"bold"))
-        exit_button = Button(self, text="Exit", command=self.checkexit,
+        width=10,bg="gold",font=("ariel",16,"bold"))
+        self.exit_button = Button(self, text="Exit", command=self.checkexit,
         width=5,bg="black", fg="white",font=("ariel",16," bold"))
+        self.q_no_label = Label(self, text="", width=60,
+                        font=('ariel', 16, 'bold'),
+                        anchor='w', justify=LEFT)
 
         # Function.
         self.display_options(self.options)
         self.display_question(self.question)
 
-        # Place buttons.
-        next_button.place(x=350,y=380)
-        exit_button.place(x=700,y=50)
+        # Place buttons/labels.
+        next_button.place(x=350,y=400)
+        self.exit_button.place(x=700,y=50)
+        self.q_no_label.place(x=70, y=80)
+        # Ensure the question label doesn't cover the button.
+        self.exit_button.lift()
         
         # no of questions
         self.data_size=len(self.question)
@@ -872,9 +901,10 @@ class Test(tk.Toplevel):
         mb.showinfo("Test complete!\nResult", f"{result}\n{correct}\n{wrong}", parent=self)
 
         # Save users results to their file.
-        today=date.today()
+        today=datetime.today()
+        formatted_date = today.strftime("%d/%m/%Y %H:%M")
         test_results=(
-            f"\nTest results ({today}):\n"
+            f"\nTest results ({formatted_date}):\n"
             f"Score: {score}\n"
             f"{correct}\n"
             f"{wrong}"
@@ -896,19 +926,17 @@ class Test(tk.Toplevel):
         val=0
         # Deselect options.
         self.opt_selected.set(0)
+        # Ensure the question label doesn't cover the button.
+        self.exit_button.lift()
         
         # Loop over options to display for radio button text.
         for option in options[self.q_no]:
             self.opts[val]['text']=option
             val+=1
-
-        print("Code is inside the display_options function", val)
         
     def display_question(self, question):
-            # Show and set the Question properties
-            q_no = Label(self, text=question[self.q_no], width=60,
-            font=( 'ariel' ,16, 'bold' ), anchor= 'w' )
-            q_no.place(x=70, y=100)
+            """Function to update the question label."""
+            self.q_no_label.config(text=question[self.q_no])
 
     def next_btn(self):
         """Function to check if the answer is correct, then increase question count by 1."""
@@ -944,21 +972,21 @@ class Test(tk.Toplevel):
         
         # initialize the list with an empty list of options and position first option.
         q_list = []
-        y_pos = 150
+        y_pos = 160
 
         # adding the options to the list
         while len(q_list) < 4:
             
             # setting the radio button properties
             radio_btn = Radiobutton(self, text="", variable=self.opt_selected,
-            value = len(q_list)+1, font = ("ariel",14))
+            value = len(q_list)+1, font = ("ariel",14), justify=LEFT)
             
             # Add button to the list then place it.
             q_list.append(radio_btn)
             radio_btn.place(x = 100, y = y_pos)
             
             # incrementing the y-axis position by 40
-            y_pos += 40
+            y_pos += 52
         
         # return the radio buttons
         return q_list
@@ -995,8 +1023,8 @@ class ProfilePage(tk.Frame):
         self.controller = controller
         self.user_info = user_info or {}
 
-        label=tk.Label(self, text="This is Profile", font=("Arial", 16))
-        label.pack(pady=20)
+        profile_title=tk.Label(self, text="Profile", font=("Helvetica", 42), bg="lemon chiffon")
+        profile_title.place(x=50, y=50)
 
         tk.Label(self, text=f"Username: {user_info.get('Username', '')}").pack()
         tk.Label(self, text=f"First name: {user_info.get('First name', '')}").pack()
@@ -1016,8 +1044,9 @@ class ProfilePage(tk.Frame):
 class HelpPage(tk.Frame):
     def __init__(self, master, controller):
         super().__init__(master)
-        label=tk.Label(self, text="This is Help", font=("Arial", 16))
-        label.pack(pady=20)
+        
+        help_title=tk.Label(self, text="Help", font=("Helvetica", 42), bg="lemon chiffon")
+        help_title.place(x=50, y=50)
 
 
 if __name__ == "__main__":

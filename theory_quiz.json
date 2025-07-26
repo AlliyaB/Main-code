@@ -1,21 +1,21 @@
 
 {
     "question": [
-      "Q1. What should you do before any modification is carried out on your vehicle?",
-      "Q2. Passengers in your vehicle are 15 years or over. Who is responsible for making sure they wear a safety belt?",
-      "Q3. If you have had a flat tyre and have fitted a space saver wheel what must you do?",
-      "Q4. If you're under 20 and you're caught with any level of blood alcohol by the police, what is the minimum penalty?",
-      "Q5. Which person can legally stop and perform a roadside check of your vehicle?",
+      "Q1. What should you do before any modification is carried \nout on your vehicle?",
+      "Q2. Passengers in your vehicle are 15 years or over. \nWho is responsible for making sure they wear a safety belt?",
+      "Q3. If you have had a flat tyre and have fitted a space \nsaver wheel what must you do?",
+      "Q4. If you're under 20 and you're caught with any level \nof blood alcohol by the police, what is the minimum penalty?",
+      "Q5. Which person can legally stop and perform a roadside \ncheck of your vehicle?",
       "Q6. What is the minimum tread depth required for car tyres?",
-      "Q7. If you have a restricted licence, what hours must you NOT drive on your own?",
-      "Q8. Which parts of the car must be in good condition to prevent too much noise and gases entering the car?",
+      "Q7. If you have a restricted licence, what hours must \nyou NOT drive on your own?",
+      "Q8. Which parts of the car must be in good condition to \nprevent too much noise and gases entering the car?",
       "Q9. At night, a towed vehicle must:",
-      "Q10. What is the maximum legal speed limit for a car towing a trailer on the open road?",
-      "Q11. If you tow another vehicle, what is the maximum distance allowed between the two vehicles?",
-      "Q12. What is the maximum distance a load may extend in front of a car?",
+      "Q10. What is the maximum legal speed limit for a car \ntowing a trailer on the open road?",
+      "Q11. If you tow another vehicle, what is the maximum \ndistance allowed between the two vehicles?",
+      "Q12. What is the maximum distance a load may extend in \nfront of a car?",
       "Q13. What does a Warrant of Fitness show?",
-      "Q14. If you have a restricted licence and you are caught driving at 2:30am on your own by the police, what happens?",
-      "Q15. Are you allowed to drive a vehicle with a load that is not tied on properly?"
+      "Q14. If you have a restricted licence and you are caught \ndriving at 2:30am on your own by the police, what happens?",
+      "Q15. Are you allowed to drive a vehicle with a load that \nis not tied on properly?"
     ],
     "answer": [
       2,
@@ -36,7 +36,7 @@
     ],
     "options": [
   
-      ["Modifying your vehicle is OK as long as you purchase the parts from a reputable dealer",
+      ["Modifying your vehicle is OK as long as you purchase \nthe parts from a reputable dealer",
         "*Check with an authorised vehicle inspector",
         "Get a certificate from the police",
         "Record the modification on your vehicle ownership papers"
@@ -46,7 +46,7 @@
         "*The passenger",
         "The owner of the car"
       ],
-      ["*Drive at 80km/h (or the speed denoted on the wheel) or less to a place you can fix the tyre as soon as possible",
+      ["*Drive at 80km/h (or the speed denoted on the wheel) or \nless to a place you can fix the tyre as soon as possible",
         "Drive up to 300km if the weather is fine",
         "Lower the pressure in the other tyres",
         "Put your hazard warning lights on while you are driving"
@@ -54,7 +54,7 @@
       ["Your licence will be suspended",
         "*$200 fine and 50 demerit points",
         "$100 fine and 35 demerit points",
-        "Nothing for a first offence, then licence suspension for the second offence"
+        "Nothing for a first offence, then licence suspension for \nthe second offence"
       ],
       ["Fire officer",
         "Ambulance officer",
@@ -97,12 +97,12 @@
         "5m from the front edge of the seat"
       ],
       ["The vehicle is roadworthy now",
-        "*The vehicle has been inspected by an approved WoF inspector and was roadworthy at the timeut",
+        "*The vehicle has been inspected by an approved WoF \ninspector and was roadworthy at the timeut",
         "The year the vehicle was made",
         "The condition of the vehicle"
       ],
       ["$300 fine",
-        "Your restricted licence is suspended for 3 months and you are fined $100",
+        "Your restricted licence is suspended for 3 months and \nyou are fined $100",
         "*35 demerit points and a $100 fine",
         "25 demerit points and a $100 fine"
       ],
@@ -111,5 +111,22 @@
         "Yes, if you put a white or red flag on the right hand-corner",
         "*No, never"
       ]
+    ],
+    "feedback": [
+      "Before modifying your vehicle in any way, it's best to check with a WoF inspector that you won't be creating a problem for yourself in the future.",
+      "The passenger is responsible. The driver is responsible for passengers under the age of 15.",
+      "Space saver wheels are not as robust as normal tyres, they have much less grip and also force your differential to work harder, placing more wear on your car, because they are smaller than normal wheels.",
+      "Drink driving is a serious offence. Drivers under 20 years old must not have any alcohol in their system. If you have more than 150mcg/litre of breath or 30mg per 100ml of blood then you could be disqualified from driving, given 50 demerit points and either fined or sent to prison.",
+      "Ambulance and fire officers are there to assist in emergencies; a police officer can stop you if they think something is wrong with your vehicle.",
+      "1.5mm is the minimum tread depth required for car tyres to get a Warrant of Fitness. However, wet weather performance drops off rapidly once tread depth is below 3mm.",
+      "While you can drive on your own on a restricted licence, you must have a supervisor with you from 10pm to 5am.",
+      "The exhaust and silencer should stop noise and gases from entering the car. The engine being in good condition will reduce the overall amount of pollution exiting the exhaust, and will ensure that there are no unnecessary mechanical and combustion noises. Of course, this question is moot if you have an electric vehicle as they have electric motors and no exhaust.",
+      "A trailer or towed vehicle must show at least one red light for night driving.",
+      "The maximum speed for a car towing a trailer is 90km/h.",
+      "4m is the maximum distance allowed between the rear of the vehicle towing, and the front of the vehicle being towed.",
+      "You can carry a load that extends 4m behind the rear axle and 3m in front of the front edge of the front seat.",
+      "The WoF shows that the vehicle was roadworthy when inspected. It's the driver's responsibility to ensure that the vehicle is maintained and is roadworthy all the time. The WoF label shows the expiry month and that it was inspected.",
+      "The penalty for driving outside of the conditions of your restricted licence is 35 demerit points and a $100 fine. Breaching other licence restrictions attracts a $400 fine and 25 demerit points.",
+      "Loads must be secure otherwise they could fall and cause a crash. You will be fined if you are caught with an insecure load."
     ]
   }

@@ -1,21 +1,21 @@
 
 {
     "question": [
-      "Q1. If you are 20 or over, what is the legal alcohol limit in micrograms per litre of breath?",
-      "Q2. When driving into bright sunlight, you should use sunglasses and your vehicle sun visors for safety. What else are you advised to do?",
-      "Q3. What is the recommended minimum distance you should allow when driving past a cyclist?",
-      "Q4. When passing a bus displaying a School sign that has stopped to let children on or off, what should your speed be?",
-      "Q5. In addition to checking it is safe to move out from the kerb into the traffic flow, what must you do?",
-      "Q6. You are the driver of the blue car. Of the four hazards marked, which one is most likely to require you to take urgent action?",
-      "Q7. You see a pedestrian carrying a white cane crossing the road. What should you do?",
-      "Q8. If you have to drive at a slow speed that may hold up other vehicles, what should you do?",
+      "Q1. If you are 20 or over, what is the legal alcohol \nlimit in micrograms per litre of breath?",
+      "Q2. When driving into bright sunlight, you should use \nsunglasses and your vehicle sun visors for safety. \nWhat else are you advised to do?",
+      "Q3. What is the recommended minimum distance you \nshould allow when driving past a cyclist?",
+      "Q4. When passing a bus displaying a School sign that \nhas stopped to let children on or off, what should your speed be?",
+      "Q5. In addition to checking it is safe to move out from \nthe kerb into the traffic flow, what must you do?",
+      "Q6. You are the driver of the blue car. Of the four hazards \nmarked, which one is most likely to require you to take urgent action?",
+      "Q7. You see a pedestrian carrying a white cane crossing \nthe road. What should you do?",
+      "Q8. If you have to drive at a slow speed that may hold \nup other vehicles, what should you do?",
       "Q9. When traffic is merging, what is a good rule to follow?",
-      "Q10. If you are driving a car, what should you do when following another vehicle in wet conditions?",
+      "Q10. If you are driving a car, what should you do when \nfollowing another vehicle in wet conditions?",
       "Q11. When are you allowed to drive across a cycle lane?",
-      "Q12. You are driving downhill on a steep, narrow road and a vehicle is coming up the hill. What should you do?",
+      "Q12. You are driving downhill on a steep, narrow road \nand a vehicle is coming up the hill. What should you do?",
       "Q13. How would you describe a good driver?",
       "Q14. Are you allowed to pass on a solid yellow line?",
-      "Q15. What should you do when there are animals coming towards you on the road?"
+      "Q15. What should you do when there are animals coming \ntowards you on the road?"
     ],
     "answer": [
       2,
@@ -66,14 +66,14 @@
         "The parked car on your side of the road (c)",
         "The parked car on the opposite side of the road (d)"
       ],
-      ["Toot your horn to let them know you’re there and they should hurry up",
+      ["Toot your horn to let them know you're there and they should hurry up",
         "Stop and wait for them to cross",
         "Speed up and pass in front of them.",
         "Stop directly in the crosswalk"
       ],
-      ["Drive at night when there’s less traffic",
+      ["Drive at night when there's less traffic",
         "Keep to the left and let others pass where possible",
-        "Nothing - drive as normal as it’s other drivers’ responsibility to overtake you safely",
+        "Nothing - drive as normal as it's other drivers' \nresponsibility to overtake you safely",
         "Keep as close as you can to the centre of the road"
       ],
       ["The larger vehicle has the right of way",
@@ -99,12 +99,12 @@
       ],
       ["A good driver is fast and smooth in the corners",
         "A good driver knows how to stay alert even while driving tired",
-        "A good driver anticipates what other drivers are going to do and is aware of what’s going on around them",
-        "A good driver knows how to work around distractions like a cellphone, the radio and eating in the car"
+        "A good driver anticipates what other drivers are going to \ndo and is aware of what's going on around them",
+        "A good driver knows how to work around distractions like \na cellphone, the radio and eating in the car"
       ],
       ["No",
         "Yes",
-        "Yes, but only if you can make the pass without crossing the yellow line and can see 100m ahead of you for the whole time you are passing",
+        "Yes, but only if you can make the pass without crossing the yellow\n line and can see 100m ahead of you for the whole time you are passing",
         "Yes, if there are no cars in the way"
       ],
       ["Flash your lights - the animals will see this and move out of the way",
@@ -112,5 +112,22 @@
         "Sound your horn to help move the animals",
         "Get a passenger to clear a path through the animals"
       ]
+    ],
+    "feedback": [
+      "250mcg/litre of breath is the maximum permissible level, although it is recommended you don't drink at all before driving as any alcohol consumption affects your reaction times.",
+      "You should keep your windscreen clean, and slow down or pull over until your eyes have adjusted to the light.",
+      "You need to leave at least a 1.5m gap between your vehicle and a cyclist.",
+      "Regardless of the direction you are approaching, you must slow down to 20kph if a school bus is letting children off, in case a child dashes across the road.",
+      "3 seconds gives enough warning to other road users that you are about to move.",
+      "Children can be unpredictable around vehicles as they don't always understand the dangers.",
+      "A white cane indicates the person has impaired vision and may not be able to see your vehicle.",
+      " If you hold other drivers up, you may cause them to be frustrated which might lead them to try to overtake in a dangerous place.",
+      "This allows merging vehicles to slot into the gaps between vehicles already in the traffic flow, enabling them to maintain their speed. It also sets an expectation of how vehicles will enter a stream of traffic.",
+      " It can take twice as long to stop in the wet because the road is more slippery.",
+      "Remember that cyclists have the right of way if they are riding straight through - you must not turn in front of them.",
+      "Even though a vehicle coming uphill can (all things being equal) stop quicker, this rule ensures the vehicle travelling downhill, where stopping distances are longer, has to pay more attention.",
+      "A good driver is well aware of what is happening around the vehicle and is able to predict what other drivers will do and build in a safety buffer to prevent accidents. Becoming a good driver takes practice and instruction from other good drivers such as a driving instructor.",
+      "You can pass a vehicle in this situation as long as you stay to the left of the yellow line. Your wheels must not cross the yellow line. This allows you to get past slow vehicles which would normally pull to the left to help you overtake, e.g. tractors.",
+      "Follow any instructions the farmer gives you. It's best to slow right down, or even stop, until the animals are past your vehicle."
     ]
   }
