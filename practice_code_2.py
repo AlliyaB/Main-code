@@ -470,9 +470,6 @@ class HomePage(tk.Frame):
     def __init__(self, master, controller):
         super().__init__(master)
         
-        label=tk.Label(self, text="This is Home", font=("Arial", 16))
-        label.pack(pady=20)
-
         # Display labels for title and substitle.
         program_title=tk.Label(self,
                                  text="KiwiDrive",
@@ -510,6 +507,12 @@ class AboutPage(tk.Frame):
         about_title=tk.Label(self, text="About", font=("Helvetica", 42), bg="lemon chiffon")
         about_title.place(x=50, y=50)
 
+        about_file = open("aboutpage_context.txt", "r")
+        about_content = about_file.read()
+        
+        about_lbl=Label(self, text=about_content, justify=LEFT, bg="lemon chiffon", font=("ariel", 11))
+        about_lbl.place(x=50, y=150)
+
 
 class QuizPage(tk.Frame):
     def __init__(self, master, controller=None, user_info=None, new_window=None):
@@ -542,9 +545,9 @@ class QuizPage(tk.Frame):
         intro_lbl.place(x=50, y=150)
 
         # Create buttons for different quiz options.
-        theory_btn=tk.Button(self, text="Theory", command=self.choose_theory)
-        behaviour_btn=tk.Button(self, text="Behaviour", command=self.choose_behaviour)
-        emergency_btn=tk.Button(self, text="Emergency", command=self.choose_emergency)
+        theory_btn=tk.Button(self, text="Theory", font=("ariel", 11, "bold"), width=10, bg="gold", command=self.choose_theory)
+        behaviour_btn=tk.Button(self, text="Behaviour", font=("ariel", 11, "bold"), width=10, bg="gold", command=self.choose_behaviour)
+        emergency_btn=tk.Button(self, text="Emergency", font=("ariel", 11, "bold"), width=10, bg="gold", command=self.choose_emergency)
 
         # Place buttons.
         theory_btn.place(x=700, y=200)
@@ -809,7 +812,7 @@ class TestPage(tk.Frame):
         intro_lbl.place(x=50, y=150)
 
         # Create buttons for different quiz options.
-        test_btn=tk.Button(self, text="Start now", command=self.choose_test)
+        test_btn=tk.Button(self, text="Start now", font=("ariel", 11, "bold"), width=10, bg="gold", command=self.choose_test)
 
         # Place buttons.
         test_btn.place(x=700, y=200)
@@ -1017,7 +1020,7 @@ class ProfilePage(tk.Frame):
             print(response)
             if response == "yes":
                 self.new_window.destroy()
-                
+
         super().__init__(master)
         self.new_window = new_window
         self.controller = controller
@@ -1026,19 +1029,72 @@ class ProfilePage(tk.Frame):
         profile_title=tk.Label(self, text="Profile", font=("Helvetica", 42), bg="lemon chiffon")
         profile_title.place(x=50, y=50)
 
-        tk.Label(self, text=f"Username: {user_info.get('Username', '')}").pack()
-        tk.Label(self, text=f"First name: {user_info.get('First name', '')}").pack()
-        tk.Label(self, text=f"Last name: {user_info.get('Last name', '')}").pack()
-        tk.Label(self, text=f"Birthdate: {user_info.get('Birthdate', '')}").pack()
+        self.display_scrollbar()
+        self.get_user_results(self.user_info)
+
+        username_lbl=Label(self, text=f"Username: {user_info.get('Username', '')}", font=("ariel", 11), bg="lemon chiffon")
+        firstname_lbl=Label(self, text=f"First name: {user_info.get('First name', '')}", font=("ariel", 11), bg="lemon chiffon")
+        lastname_lbl=Label(self, text=f"Last name: {user_info.get('Last name', '')}", font=("ariel", 11), bg="lemon chiffon")
+        birthdate_lbl=Label(self, text=f"Birthdate: {user_info.get('Birthdate', '')}", font=("ariel", 11), bg="lemon chiffon")
 
         signout_btn = tk.Button(self,
                                 text = "Signout",
-                                width = 7,
-                                height = 1,
+                                width = 11,
+                                height = 2,
                                 fg = "black",
                                 bg = "firebrick1",
+                                font=("ariel", 10, "bold"),
                                 command = signout)
-        signout_btn.pack()
+        show_results_btn=Button(self, text="Show/update results", font=("ariel", 11, "bold"), width=16, bg="gold", command=self.update_user_results)
+        
+        # Place the labels.
+        username_lbl.place(x=50, y=200)
+        firstname_lbl.place(x=50, y=225)
+        lastname_lbl.place(x=50, y=250)
+        birthdate_lbl.place(x=50, y=275)
+        signout_btn.place(x=1080, y=550)
+        show_results_btn.place(x=310, y=180)
+
+    def get_user_results(self, user_info):
+            """Function to retrieve the users results from their file."""
+            # Get username.
+            username=user_info.get('Username', '')
+            results=[]
+
+            with open(f"{username}_info.txt", "r") as file:
+                lines = file.read().splitlines(keepends=True)
+                for i, line in enumerate(lines):
+                    if "Quiz results (" in line:
+                        block = lines[i:i+4]
+                        results.extend(block)
+                        results.append("\n")
+
+            user_results = ''.join(results) if results else "No quiz results found."
+            self.text_widget.insert(END, user_results)
+    
+    def update_user_results(self):
+        """Function to clear the display for current results and update it."""
+        self.text_widget.config(state=NORMAL)
+        self.text_widget.delete("1.0", END)
+        self.get_user_results(self.user_info)
+
+    def display_scrollbar(self):
+        """Function to display scrollbar widget."""
+        # Create a frame for the scrollbar.
+        container = Frame(self)
+        container.place(relx=0.4, rely=0.6, anchor=CENTER)
+
+        # Create a vertical scrollbar within the container.
+        v = Scrollbar(container)
+        v.pack(side = RIGHT, fill = Y)
+        
+        # Create text widget.
+        self.text_widget = Text(container, width = 40, height = 20, wrap = NONE, yscrollcommand = v.set)
+        # Ensure the user cannot edit text widget.
+        self.text_widget.config(state=DISABLED)
+
+        self.text_widget.pack()
+        v.config(command=self.text_widget.yview)
 
 
 class HelpPage(tk.Frame):
@@ -1050,6 +1106,6 @@ class HelpPage(tk.Frame):
 
 
 if __name__ == "__main__":
-    root=tk.Tk()
-    app=MainWindow(root)
-    root.mainloop()
+    self=tk.Tk()
+    app=MainWindow(self)
+    self.mainloop()
