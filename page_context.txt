@@ -1,0 +1,53 @@
+About page content:
+KiwiDrive mission statement: To improve New Zealand road safety knowledge in 
+youth aged 15-24.
+
+Teenagers and even those aged up to 24 are the most involved in car accidents, 
+despite being the smallest group of road users. According to the New Zealand 
+Ministry of Transport, 3,427 car crashes in 2023 involved a young driver 
+between the ages of 15 and 24. A whopping 83% of those crashes were the direct 
+fault of a youthful driver. This highlights the significant impact our young 
+drivers have. This is largely due to their lack of experience, skill, and 
+knowledge which can cause them to make reckless decisions and get easily 
+distracted.
+
+Therefore, educating young drivers is crucial to mitigate the risks and 
+reduce their involvement in car crashes. Through KiwiDrive, we have created 
+reliable quizzes and tests adapted from AA road code and drivingtests.co.nz 
+to ensure credability.
+
+Here, we learn New Zealand road safety knowledge in a fun and engaging way 
+which equips our youth with the confidence, knowledge, and experience to make 
+smarter decisions on the road. Ultimately, creating safer outcomes.
+
+
+Quiz page content:
+In quiz mode, there are a total of 3 quizzes to choose from, as seen below.
+All of which consist of 10 - 15 questions with multiple choice answers. A 
+correct answer will be indicated by a green tick. An incorrect answer is 
+indicated by a red dot. 
+
+DURING: As the questions are answered, you will be provided with the correct 
+answer as a response. Please read the response to improve your understanding. 
+
+AFTER: Once the quiz is completed, you will be provided with insights of the 
+number of questions answered correctly/incorrectly and a percentage will be 
+calculated. You can also access any results via the profile page.
+Feel free to try more quizzes or test how much you know!
+
+
+Test page content:
+In test mode, there are a total of 25 quizzes which you are tested on. These 
+cover general road safety test questions. Test conditions apply. Meaning there 
+is no feedback provided and there is no indication of correct/incorrect answers 
+until completion. 
+
+BENEFITS:
+- Reinforce learning through quizzes
+- Gain confidence in road safety knowledge
+- Measure your progress
+
+AFTER: Once the test is completed, you will be provided with insights of the 
+number of questions answered correctly/incorrectly and a percentage will be 
+calculated. You can also access any results via the profile page.
+Feel free to try again and improve your score or learn more through quizzes!

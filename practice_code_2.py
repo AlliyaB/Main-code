@@ -507,10 +507,10 @@ class AboutPage(tk.Frame):
         about_title=tk.Label(self, text="About", font=("Helvetica", 42), bg="lemon chiffon")
         about_title.place(x=50, y=50)
 
-        about_file = open("aboutpage_context.txt", "r")
-        about_content = about_file.read()
+        with open("page_context.txt", "r") as file:
+            about_content=file.readlines()[1:22]
         
-        about_lbl=Label(self, text=about_content, justify=LEFT, bg="lemon chiffon", font=("ariel", 11))
+        about_lbl=Label(self, text=("".join(about_content)), justify=LEFT, bg="lemon chiffon", font=("ariel", 11))
         about_lbl.place(x=50, y=150)
 
 
@@ -523,22 +523,13 @@ class QuizPage(tk.Frame):
         self.new_window = new_window
         self.controller = controller
         self.user_info = user_info or {}
+
+        # Get quiz content from file.
+        with open("page_context.txt", "r") as file:
+            quiz_content=file.readlines()[24:37]
         
         intro_lbl=tk.Label(self, 
-                           text="In quiz mode, there are a total of 3 "
-                           "quizzes to choose from, as seen below. \nAll of "
-                           "which consist of 10 - 15 questions with multiple "
-                           "choice answers. \nA correct answer will be "
-                           "indicated by a green tick. An incorrect answer "
-                           "\nis indicated by a red dot. \n\nDURING: As the "
-                           "questions are answered, you will be provided with "
-                           "the correct \nanswer as a response. Please read "
-                           "the response to improve your understanding. "
-                           "\n\nAFTER: Once the quiz is completed, you will "
-                           "be provided with insights of the number of "
-                           "\nquestions answered correctly/incorrectly and a "
-                           "percentage will be calculated.  \nFeel free to "
-                           "try more quizzes or test how much you know!", 
+                           text=("".join(quiz_content)), 
                            bg="lemon chiffon", 
                            justify="left", 
                            font=("ariel", 11))
@@ -790,22 +781,12 @@ class TestPage(tk.Frame):
         self.controller = controller
         self.user_info = user_info or {}
 
+        # Get test content from file.
+        with open("page_context.txt", "r") as file:
+            test_content=file.readlines()[39:54]
+
         intro_lbl=tk.Label(self, 
-                           text="In test mode, there are a total of 25 "
-                           "quizzes which you are tested on. \nThese cover "
-                           "general road safety test questoins. Test "
-                           "conditions apply. \nMeaning there is no "
-                           "feedback provided and there is no indication "
-                           "\nof correct/incorrect answers until completion. "
-                           "\n\nBENEFITS:\n- Reinforce learning through "
-                           "quizzes\n- Gain confidence in road safety "
-                           "knowledge\n- Measure your progress"
-                           "\n\nAFTER: Once the test is completed, you will "
-                           "be provided with insights of the number of "
-                           "\nquestions answered correctly/incorrectly and a "
-                           "percentage will be calculated. \nFeel free to "
-                           "try again and improve your score or "
-                           "learn more through quizzes!",
+                           text=("".join(test_content)),
                            bg="lemon chiffon", 
                            justify="left",
                            font=("ariel", 11))
@@ -1064,13 +1045,15 @@ class ProfilePage(tk.Frame):
             with open(f"{username}_info.txt", "r") as file:
                 lines = file.read().splitlines(keepends=True)
                 for i, line in enumerate(lines):
-                    if "Quiz results (" in line:
+                    if " results (" in line:
                         block = lines[i:i+4]
                         results.extend(block)
                         results.append("\n")
 
             user_results = ''.join(results) if results else "No quiz results found."
             self.text_widget.insert(END, user_results)
+            # Ensure the user cannot edit text widget.
+            self.text_widget.config(state=DISABLED)
     
     def update_user_results(self):
         """Function to clear the display for current results and update it."""
@@ -1090,8 +1073,6 @@ class ProfilePage(tk.Frame):
         
         # Create text widget.
         self.text_widget = Text(container, width = 40, height = 20, wrap = NONE, yscrollcommand = v.set)
-        # Ensure the user cannot edit text widget.
-        self.text_widget.config(state=DISABLED)
 
         self.text_widget.pack()
         v.config(command=self.text_widget.yview)
@@ -1104,6 +1085,11 @@ class HelpPage(tk.Frame):
         help_title=tk.Label(self, text="Help", font=("Helvetica", 42), bg="lemon chiffon")
         help_title.place(x=50, y=50)
 
+        help_file = open("user_manual.txt", "r")
+        user_manual = help_file.read()
+
+        help_content=Label(self, text=user_manual)
+        help_content.place(x=50, y=150)
 
 if __name__ == "__main__":
     self=tk.Tk()
