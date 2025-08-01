@@ -457,9 +457,7 @@ class NewWindow:
 
     def checkexit(self):
         """Function to confirm user wants to exit application."""
-        response=mb.askquestion("Exit Programme?","Your "
-                                              + "progress will NOT be saved."
-                                              + "\nAre you sure you want to "
+        response=mb.askquestion("Exit Programme?","Are you sure you want to "
                                               + "exit the program?",
                                             icon='warning', master=self.master)
         if response == "yes":
@@ -1050,7 +1048,7 @@ class ProfilePage(tk.Frame):
                         results.extend(block)
                         results.append("\n")
 
-            user_results = ''.join(results) if results else "No quiz results found."
+            user_results = ''.join(results) if results else "No quiz/test results found."
             self.text_widget.insert(END, user_results)
             # Ensure the user cannot edit text widget.
             self.text_widget.config(state=DISABLED)
@@ -1088,8 +1086,29 @@ class HelpPage(tk.Frame):
         help_file = open("user_manual.txt", "r")
         user_manual = help_file.read()
 
-        help_content=Label(self, text=user_manual)
-        help_content.place(x=50, y=150)
+        # help_content=Label(self, text=user_manual, justify=LEFT, bg="lemon chiffon")
+        # help_content.place(x=50, y=150)
+
+        self.display_scrollbar()
+        self.text_widget.insert(END, user_manual)
+        # Ensure the user cannot edit text widget.
+        self.text_widget.config(state=DISABLED, font=("Arial", 11))
+
+    def display_scrollbar(self):
+        """Function to display scrollbar widget."""
+        # Create a frame for the scrollbar.
+        container = Frame(self)
+        container.place(relx=0.45, rely=0.6, anchor=CENTER)
+
+        # Create a vertical scrollbar within the container.
+        v = Scrollbar(container)
+        v.pack(side = RIGHT, fill = Y)
+        
+        # Create text widget.
+        self.text_widget = Text(container, width = 120, height = 25, wrap = NONE, yscrollcommand = v.set)
+
+        self.text_widget.pack()
+        v.config(command=self.text_widget.yview)
 
 if __name__ == "__main__":
     self=tk.Tk()

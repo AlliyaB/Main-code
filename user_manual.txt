@@ -1,0 +1,62 @@
+
+    USER MANUAL -
+
+    PURPOSE: To improve New Zealand road safety knowledge in youth aged 15-24.
+
+    NOTE: For easier navigation, all buttons which are considered to perform an action are in gold, while the 
+    signout button is red. If you wish to exit at any time, you can find this button consistently in the top 
+    right corner of any window, where you will be asked to confirm your decision by clicking "yes" or "no".
+
+    First window that appears: At the top of the page you will see a navigation bar with three buttons, two of 
+    which can redirect you to the log in page or sign up page. Alternatively, you can click the exit button, and 
+    a warning message will appear informing you that any progress you have made will NOT be saved, it will ask if 
+    you would like to exit the program, click "Yes" or  "No".
+
+    SIGNING UP: You can create an account by entering the following: First name, last name, username, password, 
+    and confirmation of password. All of this information will be kept confidential and only accessed via your 
+    username and password when you are logged in. To sign up, simply click the gold button at the bottom of the 
+    page, and you will be informed of a successful sign up or an error made somewhere. For example, if your 
+    passwords are not matching, you will be informed and can try again. Also the first name and last name must 
+    contain letters only. If you accidentally clicked the sign up button you can click the log in button in the 
+    top right corner of that page to be redirected or you can exit the programme via the first page. 
+
+    To enter your birthdate, simply follow the birthdate format (dd/mm/yyyy). A short popup message will then 
+    be displayed depending on your calculated age. For example, if you are in between the ages 15-24 which are 
+    the target users of the program, then this message will say that the program features are tailored to you. 
+    Otherwise, it will inform you that the program may not meet your individual needs. However, all users are 
+    welcome to the program.
+
+    LOGGIN IN: Username and password are necessary to gain access to any confidential information and use the program.
+
+    HOME PAGE: Once successfully signed up or logged in, you will be redirected to the home page, where the 
+    navigational bar can be found at the top of the window and on any page. The navigational bar can be used 
+    to redirect you to other pages such as home, about, quiz, test, help, and profile. At the top of the page, 
+    a title indicates which page you are on. The exit button is consistently on the top right corner. To get 
+    started, try one of the quizzes found on quiz page.
+
+    ABOUT PAGE: An introduction into New Zealand road safety is displayed, plus a brief overview of what this 
+    program has to offer.
+
+    QUIZ PAGE: There are three quizzes to choose from including behaviour, theory, and emergency. Please note 
+    progress cannot be saved once exited. Correct answers are indicated by green font and incorrect answers are 
+    indicated by red font. Throughout the quiz, you are provided feedback for wrong answers, please read them to 
+    improve your knowledge. Insights are then calculated and presented at the end of the quiz which can be later 
+    viewed in profile page. An introduction will also be displayed on this page with the above guidelines.
+
+    TEST PAGE: There is one test consisting of 25 questions. Please note progress cannot be saved once exited. 
+    Unlike the quizzes, there is no indication of correct/incorrect answers and no feedback is provided. 
+    Calculated insights are presented at the end of the test which can also be viewed in profile page. A 
+    brief introduction is displayed in this page outlining the above guidelines.
+
+    PROFILE PAGE & SIGNING OUT: In this page, you can view all of your personal information which you have 
+    provided including first name, last name, username, and birthdate. At the bottom of this page, there is 
+    a signout button, which will ask you to confirm your intentions. Simply click "yes" or "no". Past quiz 
+    and test results are displayed in a scrollable box, which is updated automatically each time you login. 
+    Otherwise, reviewing your past results after just completing a quiz or test requires a refresh, in this 
+    case simply click the show/update results button.
+
+    INSIGHTS: Insights provided at the end of a quiz or test show the percentage of correct answers, number 
+    of correct and wrong answers. To view your past results, you can find them on the profile page where you 
+    can see the date and time of the specific quiz or test you took.
+
+    Please enjoy the benefits this program has to offer!
