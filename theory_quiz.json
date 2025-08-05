@@ -97,7 +97,7 @@
         "5m from the front edge of the seat"
       ],
       ["The vehicle is roadworthy now",
-        "*The vehicle has been inspected by an approved WoF \ninspector and was roadworthy at the timeut",
+        "*The vehicle has been inspected by an approved WoF \ninspector and was roadworthy at the timeout",
         "The year the vehicle was made",
         "The condition of the vehicle"
       ],

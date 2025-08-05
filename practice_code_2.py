@@ -591,6 +591,7 @@ class Quiz(tk.Toplevel):
         """Function called when new object of class is intitialised. Set 
         question count to 0 and initilise all other functions for content."""
         self.geometry("800x450")
+        self.resizable(False, False)
         # Extract quiz name from file path of chosen quiz.
         quiz_name = chosen_quiz.split("_quiz.json")[0]
         self.title(f"{quiz_name} quiz")
@@ -626,7 +627,7 @@ class Quiz(tk.Toplevel):
                         anchor='w', justify=LEFT)
 
         # Function.
-        self.display_options(self.options)
+        self.display_options(self.options, self.q_no)
         self.display_question(self.question)
 
         # Place buttons/labels.
@@ -660,8 +661,8 @@ class Quiz(tk.Toplevel):
         today=datetime.today()
         formatted_date = today.strftime("%d/%m/%Y %H:%M")
         quiz_results=(
-            f"\n{self.quiz_name} Quiz results ({formatted_date}):\n"
-            f"Score: {score}\n"
+            f"\n{self.quiz_name} quiz results ({formatted_date}):\n"
+            f"{result}\n"
             f"{correct}\n"
             f"{wrong}"
         )
@@ -677,7 +678,7 @@ class Quiz(tk.Toplevel):
         if self.opt_selected.get() == answer[q_no]:
             return self.opt_selected.get() == answer[q_no]
         
-    def display_options(self, options):
+    def display_options(self, options, q_no):
         """Function to reset question options for next question."""
         val=0
         # Deselect options.
@@ -686,7 +687,7 @@ class Quiz(tk.Toplevel):
         self.exit_button.lift()
         
         # Loop over options to display for radio button text.
-        for option in options[self.q_no]:
+        for option in options[q_no]:
             self.opts[val]['text']=option
             val+=1
         
@@ -720,7 +721,7 @@ class Quiz(tk.Toplevel):
             else:
                 # shows the next question
                 self.display_question(self.question)
-                self.display_options(self.options)
+                self.display_options(self.options, self.q_no)
                 # Clear answer indication.
                 self.after(700, lambda: self.answer_lbl.config(text=""))
         else:
@@ -887,7 +888,7 @@ class Test(tk.Toplevel):
         formatted_date = today.strftime("%d/%m/%Y %H:%M")
         test_results=(
             f"\nTest results ({formatted_date}):\n"
-            f"Score: {score}\n"
+            f"{result}\n"
             f"{correct}\n"
             f"{wrong}"
         )
@@ -1032,7 +1033,7 @@ class ProfilePage(tk.Frame):
         lastname_lbl.place(x=50, y=250)
         birthdate_lbl.place(x=50, y=275)
         signout_btn.place(x=1080, y=550)
-        show_results_btn.place(x=310, y=180)
+        show_results_btn.place(x=310, y=170)
 
     def get_user_results(self, user_info):
             """Function to retrieve the users results from their file."""
@@ -1051,11 +1052,11 @@ class ProfilePage(tk.Frame):
             user_results = ''.join(results) if results else "No quiz/test results found."
             self.text_widget.insert(END, user_results)
             # Ensure the user cannot edit text widget.
-            self.text_widget.config(state=DISABLED)
+            self.text_widget.config(state=DISABLED, font=("Arial", 11))
     
     def update_user_results(self):
         """Function to clear the display for current results and update it."""
-        self.text_widget.config(state=NORMAL)
+        self.text_widget.config(state=NORMAL, font=("Arial", 11))
         self.text_widget.delete("1.0", END)
         self.get_user_results(self.user_info)
 
@@ -1085,9 +1086,6 @@ class HelpPage(tk.Frame):
 
         help_file = open("user_manual.txt", "r")
         user_manual = help_file.read()
-
-        # help_content=Label(self, text=user_manual, justify=LEFT, bg="lemon chiffon")
-        # help_content.place(x=50, y=150)
 
         self.display_scrollbar()
         self.text_widget.insert(END, user_manual)
