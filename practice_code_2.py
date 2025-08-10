@@ -14,10 +14,14 @@ from datetime import datetime
 import json
 
 class MainWindow:
+    """This is the first window that the user will see. It's purpose is to 
+    allow the user to login or signup.
+    """
     def __init__(self, master):
+        """Initialise the attributes of the object."""
         self.master=master
         master.title("Main Window")
-        master.geometry("1200x700")
+        master.geometry("1200x700+300+150")
         master.resizable(False, False)
         master.configure(background="lemon chiffon")
         
@@ -75,6 +79,9 @@ class MainWindow:
         self.signup_window = None
 
     def open_login_window(self):
+        """Function to open the login window and ensure no other duplicates or 
+        signup windows exist.
+        """
         if self.login_window is not None and self.login_window.winfo_exists():
             return
         # Destroy signup window if open
@@ -87,6 +94,8 @@ class MainWindow:
         LoginWindow(self.login_window, self)
 
     def open_signup_window(self):
+        """Function to open the signup window and ensure no other duplicates or
+        login windows exist."""
         if self.signup_window is not None and self.signup_window.winfo_exists():
             return
         # Destroy login window if open
@@ -110,9 +119,9 @@ class MainWindow:
 
 
 class LoginWindow:
+    """Class to log the user into the program by matching account credentials."""
     def __init__(self, master, app):
         """Function to initialise window."""
-
         def login():
             """Function to validate user input and login user."""
 
@@ -140,7 +149,8 @@ class LoginWindow:
                             mb.showinfo("Successful", "Log in successful." +
                                         f"\nWelcome back {username}", parent=self.master)
                             self.master.destroy()
-                            NewWindow(tk.Tk(), user_info)
+                            self.master.master.withdraw()
+                            NewWindow(tk.Toplevel(), user_info)
                         else: 
                             mb.showerror("Invalid input", "Incorrect password. Please enter a valid password or signup.", parent=self.master)
                 else:
@@ -211,6 +221,7 @@ class LoginWindow:
 
 
 class SignupWindow:
+    """Function to sign the user in. Includes validation and writing to a file."""
     def __init__(self, master, app):
         """Initialise the signup window."""
         def signup():
@@ -300,8 +311,8 @@ class SignupWindow:
                     mb.showinfo("Successful", "Sign up successful." +
                                         f"\nWelcome {username}", parent=self.master)
                     self.master.destroy()
-
-                    NewWindow(tk.Tk(), user_info)
+                    self.master.master.withdraw()
+                    NewWindow(tk.Toplevel(), user_info)
 
             else:
                 mb.showerror("Invalid input", "Please enter all fields", parent=self.master)
@@ -388,10 +399,12 @@ class SignupWindow:
 
 
 class NewWindow:
+    """Class that displays a new window which stores all the pages the use can browse."""
     def __init__(self, master, user_info):
+        """Function to initialise the attributes of the object."""
         self.master=master
         master.title("New Window")
-        master.geometry("1200x700")
+        master.geometry("1200x700+300+150")
         master.resizable(False, False)
         master.configure(background="lemon chiffon")
 
@@ -452,6 +465,7 @@ class NewWindow:
         self.show_frame("HomePage")
 
     def show_frame(self, page_name):
+        """Show frame based on users choice."""
         frame=self.frames[page_name]
         frame.tkraise()
 
@@ -465,7 +479,9 @@ class NewWindow:
 
 
 class HomePage(tk.Frame):
+    """Class to display program title."""
     def __init__(self, master, controller):
+        """Function to initialise the attributes of the object."""
         super().__init__(master)
         
         # Display labels for title and substitle.
@@ -486,9 +502,9 @@ class HomePage(tk.Frame):
         image=Image.open("yellow_road_image.png")
         resize_image=image.resize((400, 400))
         img=ImageTk.PhotoImage(resize_image)
-        road_image=tk.Label(image=img, bd=0, highlightthickness=0)
+        road_image=tk.Label(self, image=img, bd=0, highlightthickness=0)
         road_image.image=img
-        road_image.place(x=750, y=200)
+        road_image.place(x=750, y=160)
 
         # Create dots for the letter I. To look like a traffic light.
         dots=[(193, 'red'), (335, 'goldenrod1'), (522, 'green')]
@@ -499,7 +515,9 @@ class HomePage(tk.Frame):
 
 
 class AboutPage(tk.Frame):
+    """Class to inform the user of the program and its purpose."""
     def __init__(self, master, controller):
+        """Function to initialise the attributes of the object."""
         super().__init__(master)
         
         about_title=tk.Label(self, text="About", font=("Helvetica", 42), bg="lemon chiffon")
@@ -511,9 +529,18 @@ class AboutPage(tk.Frame):
         about_lbl=Label(self, text=("".join(about_content)), justify=LEFT, bg="lemon chiffon", font=("ariel", 11))
         about_lbl.place(x=50, y=150)
 
+        # Create image.
+        image=Image.open("about_page_img.jpg")
+        img=ImageTk.PhotoImage(image)
+        about_image=tk.Label(self, image=img, bd=0, highlightthickness=0)
+        about_image.image=img
+        about_image.place(x=650, y=180)
+
 
 class QuizPage(tk.Frame):
+    """Class to display the quiz frame."""
     def __init__(self, master, controller=None, user_info=None, new_window=None):
+        """Function to initialise the attributes of the object."""
         super().__init__(master)
         quiz_title=tk.Label(self, text="Quiz", font=("Helvetica", 42), bg="lemon chiffon")
         quiz_title.place(x=50, y=50)
@@ -534,39 +561,24 @@ class QuizPage(tk.Frame):
         intro_lbl.place(x=50, y=150)
 
         # Create buttons for different quiz options.
-        theory_btn=tk.Button(self, text="Theory", font=("ariel", 11, "bold"), width=10, bg="gold", command=self.choose_theory)
-        behaviour_btn=tk.Button(self, text="Behaviour", font=("ariel", 11, "bold"), width=10, bg="gold", command=self.choose_behaviour)
-        emergency_btn=tk.Button(self, text="Emergency", font=("ariel", 11, "bold"), width=10, bg="gold", command=self.choose_emergency)
+        theory_btn=tk.Button(self, text="Theory", font=("ariel", 11, "bold"), width=10, bg="gold", command=lambda: self.choose_quiz('theory_quiz.json'))
+        behaviour_btn=tk.Button(self, text="Behaviour", font=("ariel", 11, "bold"), width=10, bg="gold", command=lambda: self.choose_quiz('behaviour_quiz.json'))
+        emergency_btn=tk.Button(self, text="Emergency", font=("ariel", 11, "bold"), width=10, bg="gold", command=lambda: self.choose_quiz('emergency_quiz.json'))
 
         # Place buttons.
         theory_btn.place(x=700, y=200)
         behaviour_btn.place(x=700, y=400)
         emergency_btn.place(x=900, y=200)
 
-        # # Create images for the button icons.
-        # image=Image.open("theory_image_1.webp")
-        # resize_image=image.resize((400, 400))
-        # img=ImageTk.PhotoImage(resize_image)
-        # road_image=tk.Label(image=img, bd=0, highlightthickness=0)
-        # road_image.image=img
-        # road_image.place(x=750, y=200)
-
-    def choose_theory(self):
-        self.chosen_quiz = 'theory_quiz.json'
+    def choose_quiz(self, quiz_name):
+        """Function to choose the quiz which will be referenced in quiz class."""
+        self.chosen_quiz = quiz_name
         self.open_quiz(self.chosen_quiz, self.user_info)
-    
-    def choose_behaviour(self):
-        self.chosen_quiz = 'behaviour_quiz.json'
-        self.open_quiz(self.chosen_quiz, self.user_info)
-
-    def choose_emergency(self):
-        self.chosen_quiz = 'emergency_quiz.json'
-        self.open_quiz(self.chosen_quiz, self.user_info)
-
-    def get_chosen_quiz(self):
-        return self.chosen_quiz
     
     def open_quiz(self, chosen_quiz, user_info):
+        """Function to open the chosen quiz and assign its contents to questions, 
+        options, and answers.
+        """
         # Get the data from the json file.
         with open(chosen_quiz) as f:
             data = json.load(f)
@@ -592,8 +604,10 @@ class Quiz(tk.Toplevel):
         question count to 0 and initilise all other functions for content."""
         self.geometry("800x450")
         self.resizable(False, False)
+        # Ensure only top level window is interactable.
+        Quiz.grab_set(self)
         # Extract quiz name from file path of chosen quiz.
-        quiz_name = chosen_quiz.split("_quiz.json")[0]
+        quiz_name = (chosen_quiz.split("_quiz.json")[0]).capitalize()
         self.title(f"{quiz_name} quiz")
 
         # Saving external variables to this class to use across functions.
@@ -732,20 +746,16 @@ class Quiz(tk.Toplevel):
         feedback_txt=feedback[self.q_no]
         mb.showinfo("Feedback", feedback_txt, parent=self)
 
-    # This method shows the radio buttons to select the Question
-    # on the screen at the specified position. It also returns a
-    # list of radio button which are later used to add the options to
-    # them.
     def radio_buttons(self):
-        
-        # initialize the list with an empty list of options and position first option.
+        """Function to display radiobuttons that are associated with options the user can select."""
+        # Initialize the list with an empty list of options and position first option.
         q_list = []
         y_pos = 160
 
-        # adding the options to the list
+        # Adding the options to the list.
         while len(q_list) < 4:
             
-            # setting the radio button properties
+            # Aetting the radio button properties
             radio_btn = Radiobutton(self, text="", variable=self.opt_selected,
             value = len(q_list)+1, font = ("ariel",14), justify=LEFT)
             
@@ -753,10 +763,10 @@ class Quiz(tk.Toplevel):
             q_list.append(radio_btn)
             radio_btn.place(x = 100, y = y_pos)
             
-            # incrementing the y-axis position by 40
+            # Incrementing the y-axis position by 40.
             y_pos += 52
         
-        # return the radio buttons
+        # Return the radio buttons.
         return q_list
     
     def checkexit(self):
@@ -771,7 +781,9 @@ class Quiz(tk.Toplevel):
 
 
 class TestPage(tk.Frame):
+    """Function to display the test frame, including a short introducation and buttons."""
     def __init__(self, master, controller=None, user_info=None, new_window=None):
+        """Function to initialise attributes of the object."""
         super().__init__(master)
         test_title=tk.Label(self, text="Test", font=("Helvetica", 42), bg="lemon chiffon")
         test_title.place(x=50, y=50)
@@ -792,18 +804,14 @@ class TestPage(tk.Frame):
         intro_lbl.place(x=50, y=150)
 
         # Create buttons for different quiz options.
-        test_btn=tk.Button(self, text="Start now", font=("ariel", 11, "bold"), width=10, bg="gold", command=self.choose_test)
+        test_btn=tk.Button(self, text="Start now", font=("ariel", 11, "bold"), width=10, bg="gold", command=lambda: self.open_test('test.json', self.user_info))
 
         # Place buttons.
         test_btn.place(x=700, y=200)
 
-    def choose_test(self):
-        self.chosen_test = 'test.json'
-        self.open_test(self.chosen_test, self.user_info)
-
-    def open_test(self, chosen_test, user_info):
+    def open_test(self, test, user_info):
         # Get the data from the json file.
-        with open(chosen_test) as f:
+        with open(test) as f:
             data = json.load(f)
 
         # Set the question, options, and answer.
@@ -827,6 +835,8 @@ class Test(tk.Toplevel):
         question count to 0 and initilise all other functions for content."""
         self.geometry("800x450")
         self.title("Test")
+        # Ensure only top level window is interactable.
+        Test.grab_set(self)
 
         # Saving external variables to this class to use across functions.
         self.question, self.options, self.answer = test_data
@@ -1000,6 +1010,7 @@ class ProfilePage(tk.Frame):
             print(response)
             if response == "yes":
                 self.new_window.destroy()
+                self.new_window.master.deiconify()
 
         super().__init__(master)
         self.new_window = new_window
@@ -1061,8 +1072,7 @@ class ProfilePage(tk.Frame):
         self.get_user_results(self.user_info)
 
     def display_scrollbar(self):
-        """Function to display scrollbar widget."""
-        # Create a frame for the scrollbar.
+        """Function to display scrollbar widget in a frame."""
         container = Frame(self)
         container.place(relx=0.4, rely=0.6, anchor=CENTER)
 
