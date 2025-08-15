@@ -1,9 +1,8 @@
-"""Author: Alliya Buchanan, Date: 15/08/24 - 09/09/24, Purpose: To improve 
+"""Author: Alliya Buchanan, Date: 15/08/24 - 09/09/24, Purpose: To improve
 New Zealand road safety knowledge in youth aged 15-24.
 """
 
-"""Allows the tkinter libary to be imported as tk."""
-"""Import all functions and variables."""
+# Importing all the modules for the program.
 from tkinter import *
 import tkinter as tk
 from tkinter import messagebox as mb
@@ -13,17 +12,15 @@ import os
 from datetime import date
 import json
 from datetime import datetime
-"""Allows messagbox windows to be displayed and called as mb."""
-"""Creates and modifies images."""
-"""Provides the python intepreter with image editing capabilities."""
-"""Provides a way to interact with the operating"""
-"""Allows the current date to be imported."""
-"""Allows the current time to be imported."""
-"""Allows json file to be used for data."""
+
+# Use of constants.
+RESULTS_BLOCK_SIZE = 4
+BG_COLOUR = "lemon chiffon"
+INITIAL_GEOMETRY_POS = "+300+150"
 
 
 class MainWindow:
-    """This is the first window that the user will see. It's purpose is to 
+    """This is the first window that the user will see. It's purpose is to
     allow the user to login or signup.
     """
 
@@ -31,22 +28,22 @@ class MainWindow:
         """Initialise the attributes of the object."""
         self.master = master
         master.title("Main Window")
-        master.geometry("1200x700+300+150")
+        master.geometry(f"1200x700{INITIAL_GEOMETRY_POS}")
         master.resizable(False, False)
-        master.configure(background="lemon chiffon")
+        master.configure(background=BG_COLOUR)
 
         # Display labels for title and substitle.
         program_title = tk.Label(master,
                                  text="KiwiDrive",
                                  font=("Helvetica", 100, "bold"),
                                  fg="gold",
-                                 bg="lemon chiffon")
+                                 bg=BG_COLOUR)
         program_title.place(x=100, y=200)
 
         sub_title = tk.Label(master,
                              text="Learn. Quiz. Test.",
                              font=("Helvetica", 20),
-                             bg="lemon chiffon")
+                             bg=BG_COLOUR)
         sub_title.place(x=100, y=370)
 
         # Create image.
@@ -61,7 +58,7 @@ class MainWindow:
         dots = [(193, 'red'), (335, 'goldenrod1'), (522, 'green')]
         for x, color in dots:
             canvas = tk.Canvas(master, width=50, height=50,
-                               bg="lemon chiffon", bd=0, highlightthickness=0)
+                               bg=BG_COLOUR, bd=0, highlightthickness=0)
             canvas.place(x=x, y=202)
             canvas.create_oval(15, 15, 35, 35, fill=color, outline='')
 
@@ -90,7 +87,7 @@ class MainWindow:
         self.signup_window = None
 
     def open_login_window(self):
-        """Function to open the login window and ensure no other duplicates or 
+        """Function to open the login window and ensure no other duplicates or
         signup windows exist.
         """
         if self.login_window is not None and self.login_window.winfo_exists():
@@ -176,7 +173,7 @@ class LoginWindow:
         master.title("Login")
         master.geometry("350x450+800+150")
         master.resizable(False, False)
-        master.configure(background="lemon chiffon")
+        master.configure(background=BG_COLOUR)
         self.app = app
 
         canvas = Canvas(master,
@@ -185,12 +182,12 @@ class LoginWindow:
                         bg="black")
 
         # Create labels/buttons for title and user navigation.
-        tk.Label(master, text="Log in:", font=("Helvetica", 15),
-                 fg="white", bg="black").place(x=10, y=24)
-        tk.Label(master, text="Log into your account", font=(
-            "Helvetica", 10), fg="white", bg="black").place(x=82, y=30)
-        tk.Button(master, text="Sign up", width=11, height=2, font=(
-            "Helvetica", 10, "bold"), command=self.switch_to_signup).place(x=240, y=15)
+        login_lbl = tk.Label(master, text="Log in:", font=("Helvetica", 15),
+                             fg="white", bg="black")
+        title_lbl = tk.Label(master, text="Log into your account", font=(
+            "Helvetica", 10), fg="white", bg="black")
+        signup_btn = tk.Button(master, text="Sign up", width=11, height=2, font=(
+            "Helvetica", 10, "bold"), command=self.switch_to_signup)
         login_btn = tk.Button(master, text="Log in", font=(
             "Helvetica", 10, "bold"), width=11, height=2, fg="black", bg="gold", command=login)
 
@@ -202,18 +199,21 @@ class LoginWindow:
         username_lbl = tk.Label(master,
                                 text="Username:",
                                 font=("Helvetica", 10, "bold"),
-                                bg="lemon chiffon")
+                                bg=BG_COLOUR)
         username_entry = tk.Entry(master,
                                   textvariable=username_var)
         password_lbl = tk.Label(master,
                                 text="Password:",
                                 font=("Helvetica", 10, "bold"),
-                                bg="lemon chiffon")
+                                bg=BG_COLOUR)
         password_entry = tk.Entry(master,
                                   textvariable=password_var,
                                   show="*")
 
         # Place labels and entries.
+        login_lbl.place(x=10, y=24)
+        title_lbl.place(x=82, y=30)
+        signup_btn.place(x=240, y=15)
         username_lbl.place(x=40, y=200)
         username_entry.place(x=120, y=200)
         password_lbl.place(x=40, y=240)
@@ -340,7 +340,7 @@ class SignupWindow:
         master.title("Signup")
         master.geometry("350x450+800+150")
         master.resizable(False, False)
-        master.configure(background="lemon chiffon")
+        master.configure(background=BG_COLOUR)
         self.app = app
 
         # Print today's date, neccassary for calculating the users age.
@@ -354,14 +354,20 @@ class SignupWindow:
                         bg="black")
 
         # Create labels/buttons for title and user navigation.
-        tk.Label(master, text="Sign up:", font=("Helvetica", 15),
-                 fg="white", bg="black").place(x=10, y=24)
-        tk.Label(master, text="Create an account", font=(
-            "Helvetica", 10), fg="white", bg="black").place(x=82, y=30)
-        tk.Button(master, text="Log in", width=11, height=2, font=(
-            "Helvetica", 10, "bold"), command=self.switch_to_login).place(x=240, y=15)
-        tk.Button(master, text="Sign up", font=("Helvetica", 10, "bold"), width=11,
-                  height=2, fg="black", bg="gold", command=signup).place(x=120, y=400)
+        signup_lbl = tk.Label(master, text="Sign up:", font=("Helvetica", 15),
+                              fg="white", bg="black")
+        title_lbl = tk.Label(master, text="Create an account", font=(
+            "Helvetica", 10), fg="white", bg="black")
+        login_btn = tk.Button(master, text="Log in", width=11, height=2, font=(
+            "Helvetica", 10, "bold"), command=self.switch_to_login)
+        signup_btn = tk.Button(master, text="Sign up", font=("Helvetica", 10, "bold"), width=11,
+                               height=2, fg="black", bg="gold", command=signup)
+
+        # Place labels/buttons.
+        signup_lbl.place(x=10, y=24)
+        title_lbl.place(x=82, y=30)
+        login_btn.place(x=240, y=15)
+        signup_btn.place(x=120, y=400)
 
         # Declaring name and password as string variables.
         first_name_var = tk.StringVar()
@@ -395,7 +401,7 @@ class SignupWindow:
 
             # Create and place labels.
             lbl = tk.Label(master, text=label_text, font=(
-                "Helvetica", 10, "bold"), bg="lemon chiffon")
+                "Helvetica", 10, "bold"), bg=BG_COLOUR)
             lbl.place(x=label_x, y=y)
             labels.append(lbl)
             # Create and place entries.
@@ -428,15 +434,12 @@ class NewWindow:
         """Function to initialise the attributes of the object."""
         self.master = master
         master.title("New Window")
-        master.geometry("1200x700+300+150")
+        master.geometry(f"1200x700{INITIAL_GEOMETRY_POS}")
         master.resizable(False, False)
-        master.configure(background="lemon chiffon")
+        master.configure(background=BG_COLOUR)
 
         # Save user_info to this class.
         self.user_info = user_info
-
-        tk.Label(master, text="Testing visibility in new window").place(
-            x=200, y=300)
 
         # Create a coloured box for the top where navigation bar will be.
         canvas = Canvas(master,
@@ -485,7 +488,7 @@ class NewWindow:
                 frame = F(master=container, controller=self)
 
             self.frames[page_name] = frame
-            frame.configure(bg="lemon chiffon")
+            frame.configure(bg=BG_COLOUR)
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame("HomePage")
@@ -499,7 +502,7 @@ class NewWindow:
         """Function to confirm user wants to exit application."""
         response = mb.askquestion("Exit Programme?", "Are you sure you want to "
                                   + "exit the program?",
-                                  icon='warning', master=self.master)
+                                  icon='warning')
         if response == "yes":
             self.master.destroy()
 
@@ -516,13 +519,13 @@ class HomePage(tk.Frame):
                                  text="KiwiDrive",
                                  font=("Helvetica", 100, "bold"),
                                  fg="gold",
-                                 bg="lemon chiffon")
+                                 bg=BG_COLOUR)
         program_title.place(x=100, y=200)
 
         sub_title = tk.Label(self,
                              text="Learn. Quiz. Test.",
                              font=("Helvetica", 20),
-                             bg="lemon chiffon")
+                             bg=BG_COLOUR)
         sub_title.place(x=100, y=370)
 
         # Create image.
@@ -537,7 +540,7 @@ class HomePage(tk.Frame):
         dots = [(193, 'red'), (335, 'goldenrod1'), (522, 'green')]
         for x, color in dots:
             canvas = tk.Canvas(self, width=50, height=50,
-                               bg="lemon chiffon", bd=0, highlightthickness=0)
+                               bg=BG_COLOUR, bd=0, highlightthickness=0)
             canvas.place(x=x, y=202)
             canvas.create_oval(15, 15, 35, 35, fill=color, outline='')
 
@@ -550,14 +553,14 @@ class AboutPage(tk.Frame):
         super().__init__(master)
 
         about_title = tk.Label(self, text="About", font=(
-            "Helvetica", 42), bg="lemon chiffon")
+            "Helvetica", 42), bg=BG_COLOUR)
         about_title.place(x=50, y=50)
 
         with open("page_context.txt", "r") as file:
             about_content = file.readlines()[1:22]
 
         about_lbl = Label(self, text=("".join(about_content)),
-                          justify=LEFT, bg="lemon chiffon", font=("ariel", 11))
+                          justify=LEFT, bg=BG_COLOUR, font=("ariel", 11))
         about_lbl.place(x=50, y=150)
 
         # Create image.
@@ -575,7 +578,7 @@ class QuizPage(tk.Frame):
         """Function to initialise the attributes of the object."""
         super().__init__(master)
         quiz_title = tk.Label(self, text="Quiz", font=(
-            "Helvetica", 42), bg="lemon chiffon")
+            "Helvetica", 42), bg=BG_COLOUR)
         quiz_title.place(x=50, y=50)
 
         self.new_window = new_window
@@ -588,7 +591,7 @@ class QuizPage(tk.Frame):
 
         intro_lbl = tk.Label(self,
                              text=("".join(quiz_content)),
-                             bg="lemon chiffon",
+                             bg=BG_COLOUR,
                              justify="left",
                              font=("ariel", 11))
         intro_lbl.place(x=50, y=150)
@@ -641,7 +644,7 @@ class Quiz(tk.Toplevel):
         super().__init__(master)
         """Function called when new object of class is intitialised. Set 
         question count to 0 and initilise all other functions for content."""
-        self.geometry("800x450+300+150")
+        self.geometry(f"800x450{INITIAL_GEOMETRY_POS}")
         self.resizable(False, False)
         # Ensure only top level window is interactable.
         Quiz.grab_set(self)
@@ -691,7 +694,7 @@ class Quiz(tk.Toplevel):
         # Ensure the button stays on top of the question label.
         self.exit_button.lift()
 
-        # no of questions
+        # No of questions.
         self.data_size = len(self.question)
 
         # keep a counter of correct answers
@@ -797,8 +800,8 @@ class Quiz(tk.Toplevel):
         while len(q_list) < 4:
 
             # Aetting the radio button properties
-            radio_btn = Radiobutton(self, text="", variable=self.opt_selected,
-                                    value=len(q_list)+1, font=("ariel", 14), justify=LEFT)
+            radio_btn = tk.Radiobutton(self, text="", variable=self.opt_selected,
+                                       value=len(q_list)+1, font=("ariel", 14), justify=LEFT)
 
             # Add button to the list then place it.
             q_list.append(radio_btn)
@@ -828,7 +831,7 @@ class TestPage(tk.Frame):
         """Function to initialise attributes of the object."""
         super().__init__(master)
         test_title = tk.Label(self, text="Test", font=(
-            "Helvetica", 42), bg="lemon chiffon")
+            "Helvetica", 42), bg=BG_COLOUR)
         test_title.place(x=50, y=50)
 
         self.new_window = new_window
@@ -841,7 +844,7 @@ class TestPage(tk.Frame):
 
         intro_lbl = tk.Label(self,
                              text=("".join(test_content)),
-                             bg="lemon chiffon",
+                             bg=BG_COLOUR,
                              justify="left",
                              font=("ariel", 11))
         intro_lbl.place(x=50, y=150)
@@ -886,7 +889,7 @@ class Test(tk.Toplevel):
         super().__init__(master)
         """Function called when new object of class is intitialised. Set 
         question count to 0 and initilise all other functions for content."""
-        self.geometry("800x450+300+150")
+        self.geometry(f"800x450{INITIAL_GEOMETRY_POS}")
         self.title("Test")
         # Ensure only top level window is interactable.
         Test.grab_set(self)
@@ -1022,8 +1025,8 @@ class Test(tk.Toplevel):
         while len(q_list) < 4:
 
             # setting the radio button properties
-            radio_btn = Radiobutton(self, text="", variable=self.opt_selected,
-                                    value=len(q_list)+1, font=("ariel", 14), justify=LEFT)
+            radio_btn = tk.Radiobutton(self, text="", variable=self.opt_selected,
+                                       value=len(q_list)+1, font=("ariel", 14), justify=LEFT)
 
             # Add button to the list then place it.
             q_list.append(radio_btn)
@@ -1069,20 +1072,20 @@ class ProfilePage(tk.Frame):
         self.user_info = user_info or {}
 
         profile_title = tk.Label(self, text="Profile", font=(
-            "Helvetica", 42), bg="lemon chiffon")
+            "Helvetica", 42), bg=BG_COLOUR)
         profile_title.place(x=50, y=50)
 
         self.display_scrollbar()
         self.get_user_results(self.user_info)
 
         username_lbl = Label(self, text=f"Username: {user_info.get('Username', '')}", font=(
-            "ariel", 11), bg="lemon chiffon")
+            "ariel", 11), bg=BG_COLOUR)
         firstname_lbl = Label(self, text=f"First name: {user_info.get('First name', '')}", font=(
-            "ariel", 11), bg="lemon chiffon")
+            "ariel", 11), bg=BG_COLOUR)
         lastname_lbl = Label(self, text=f"Last name: {user_info.get('Last name', '')}", font=(
-            "ariel", 11), bg="lemon chiffon")
+            "ariel", 11), bg=BG_COLOUR)
         birthdate_lbl = Label(self, text=f"Birthdate: {user_info.get('Birthdate', '')}", font=(
-            "ariel", 11), bg="lemon chiffon")
+            "ariel", 11), bg=BG_COLOUR)
 
         signout_btn = tk.Button(self,
                                 text="Signout",
@@ -1108,9 +1111,6 @@ class ProfilePage(tk.Frame):
         # Get username.
         username = user_info.get('Username', '')
         results = []
-
-        # Use of constants.
-        RESULTS_BLOCK_SIZE = 4
 
         with open(f"{username}_info.txt", "r") as file:
             lines = file.read().splitlines(keepends=True)
@@ -1154,7 +1154,7 @@ class HelpPage(tk.Frame):
         super().__init__(master)
 
         help_title = tk.Label(self, text="Help", font=(
-            "Helvetica", 42), bg="lemon chiffon")
+            "Helvetica", 42), bg=BG_COLOUR)
         help_title.place(x=50, y=50)
 
         help_file = open("user_manual.txt", "r")
