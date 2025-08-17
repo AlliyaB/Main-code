@@ -37,79 +37,79 @@
     "options": [
   
       ["Modifying your vehicle is OK as long as you purchase \nthe parts from a reputable dealer",
-        "*Check with an authorised vehicle inspector",
+        "Check with an authorised vehicle inspector",
         "Get a certificate from the police",
         "Record the modification on your vehicle ownership papers"
       ],
       ["The oldest person in the car",
         "The driver",
-        "*The passenger",
+        "The passenger",
         "The owner of the car"
       ],
-      ["*Drive at 80km/h (or the speed denoted on the wheel) or \nless to a place you can fix the tyre as soon as possible",
+      ["Drive at 80km/h (or the speed denoted on the wheel) or \nless to a place you can fix the tyre as soon as possible",
         "Drive up to 300km if the weather is fine",
         "Lower the pressure in the other tyres",
         "Put your hazard warning lights on while you are driving"
       ],
       ["Your licence will be suspended",
-        "*$200 fine and 50 demerit points",
+        "$200 fine and 50 demerit points",
         "$100 fine and 35 demerit points",
         "Nothing for a first offence, then licence suspension for \nthe second offence"
       ],
       ["Fire officer",
         "Ambulance officer",
-        "*Police officer",
+        "Police officer",
         "Tow truck driver"
       ],
       ["1mm",
         "1.25mm",
-        "*1.5mm",
+        "1.5mm",
         "2mm"
       ],
-      ["*10pm-5am",
+      ["10pm-5am",
         "Dawn to dusk",
         "6am-6pm",
         "6am-10pm"
       ],
       ["Windows",
-        "*Exhaust, silencer (muffler) and engine",
+        "Exhaust, silencer (muffler) and engine",
         "Heater and air conditioning",
         "Mudguards and mud flaps"
       ],
-      ["*Have a red light at the back",
+      ["Have a red light at the back",
         "Have a white light at the back",
         "Have its hazard warning lights on or horn sounding",
         "Be travelling slower than 50km/h"
       ],
       ["80km/h",
         "85km/h",
-        "*90km/h",
+        "90km/h",
         "95km/h"
       ],
       ["2m",
-        "*4m",
+        "4m",
         "6m",
         "8m"
       ],
       ["1m in front of the bumper",
-        "*3m from the front edge of the front seat",
+        "3m from the front edge of the front seat",
         "4m from the front edge of the seat",
         "5m from the front edge of the seat"
       ],
       ["The vehicle is roadworthy now",
-        "*The vehicle has been inspected by an approved WoF \ninspector and was roadworthy at the timeout",
+        "The vehicle has been inspected by an approved WoF \ninspector and was roadworthy at the timeout",
         "The year the vehicle was made",
         "The condition of the vehicle"
       ],
       ["$300 fine",
         "Your restricted licence is suspended for 3 months and \nyou are fined $100",
-        "*35 demerit points and a $100 fine",
+        "35 demerit points and a $100 fine",
         "25 demerit points and a $100 fine"
       ],
       ["Yes, but drive at less than 20km/h",
         "Yes, if you're confident it won't come off the trailer",
         "Yes, if you put a white or red flag on the right hand-corner",
-        "*No, never"
+        "No, never"
       ]
     ],
     "feedback": [

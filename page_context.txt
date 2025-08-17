@@ -24,8 +24,8 @@ smarter decisions on the road. Ultimately, creating safer outcomes.
 Quiz page content:
 In quiz mode, there are a total of 3 quizzes to choose from, as seen below.
 All of which consist of 10 - 15 questions with multiple choice answers. A 
-correct answer will be indicated by a green tick. An incorrect answer is 
-indicated by a red dot. 
+correct answer will be indicated by a green font. An incorrect answer is 
+indicated by a red font. 
 
 DURING: As the questions are answered, you will be provided with the correct 
 answer as a response. Please read the response to improve your understanding. 

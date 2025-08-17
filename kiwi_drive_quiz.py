@@ -1,0 +1,1230 @@
+"""Author: Alliya Buchanan, Date: 19/05/25 - 17/08/25, Purpose: To improve
+New Zealand road safety knowledge in youth aged 15-24.
+"""
+
+# Standard library imports.
+import os
+import json
+from datetime import date, datetime
+import tkinter as tk
+from tkinter import messagebox as mb
+
+# Third party imports.
+from PIL import Image, ImageTk
+
+# Use of constants.
+BG_COLOUR = "lemon chiffon"
+MAIN_WIDTH = 1200
+MAIN_HEIGHT = 700
+ENTRY_WIDTH = 350
+ENTRY_HEIGHT = 450
+QNT_WIDTH = 850
+QNT_HEIGHT = 450
+X_OFFSET = 0
+Y_OFFSET = -50
+
+STANDARD_FONT = ("Helvetica", 10, "bold")
+PAGE_TITLE_FONT = ("Helvetica", 42)
+
+NUM_RADIOBUTTONS = 4
+RADIO_X_POSITION = 100
+RADIO_Y_START = 160
+RADIO_Y_SPACING = 52
+RESULTS_BLOCK_SIZE = 4
+
+
+class MainWindow:
+    """This is the first window that the user will see. It's purpose is to
+    allow the user to login or signup.
+    """
+
+    def __init__(self, master):
+        """Initialise the attributes of the object."""
+        self.master = master
+        master.title("Main Window")
+        screen_width = master.winfo_screenwidth()
+        screen_height = master.winfo_screenheight()
+        x_pos = (screen_width - MAIN_WIDTH + X_OFFSET) // 2
+        y_pos = (screen_height - MAIN_HEIGHT + Y_OFFSET) // 2
+        master.geometry(f"{MAIN_WIDTH}x{MAIN_HEIGHT}+{x_pos}+{y_pos}")
+        master.resizable(False, False)
+        master.configure(background=BG_COLOUR)
+
+        # Display labels for title and substitle.
+        program_title = tk.Label(master,
+                                 text="KiwiDrive",
+                                 font=("Helvetica", 100, "bold"),
+                                 fg="gold",
+                                 bg=BG_COLOUR)
+        program_title.place(x=100, y=200)
+
+        sub_title = tk.Label(master,
+                             text="Learn. Quiz. Test.",
+                             font=("Helvetica", 20),
+                             bg=BG_COLOUR)
+        sub_title.place(x=100, y=370)
+
+        # Create image.
+        image = Image.open("yellow_road_image.png")
+        resize_image = image.resize((400, 400))
+        img = ImageTk.PhotoImage(resize_image)
+        road_image = tk.Label(image=img, bd=0, highlightthickness=0)
+        road_image.image = img
+        road_image.place(x=750, y=200)
+
+        # Create dots for the letter 'i' to look like a traffic light.
+        dots = [(193, 'red'), (335, 'goldenrod1'), (522, 'green')]
+        for x, color in dots:
+            canvas = tk.Canvas(master, width=50, height=50,
+                               bg=BG_COLOUR, bd=0, highlightthickness=0)
+            canvas.place(x=x, y=202)
+            canvas.create_oval(15, 15, 35, 35, fill=color, outline='')
+
+        # Create a coloured box for the top where navigation bar will be.
+        canvas = tk.Canvas(master,
+                           height=70,
+                           width=1210,
+                           bg="black")
+        canvas.place(x=0, y=0)
+
+        # Create Sign up, log in, and exit buttons.
+        login_btn = tk.Button(master, text="Log in", width=11, height=2,
+                              font=STANDARD_FONT, command=self.open_login_window)
+        signup_btn = tk.Button(master, text="Sign up", width=11, height=2,
+                               font=STANDARD_FONT, command=self.open_signup_window)
+        exit_btn = tk.Button(master, text="Exit", width=11, height=2,
+                             font=STANDARD_FONT, command=self.checkexit)
+
+        # Place signup, login, and exit buttons.
+        login_btn.place(x=830, y=15)
+        signup_btn.place(x=940, y=15)
+        exit_btn.place(x=1080, y=15)
+
+        # Set windows to none.
+        self.login_window = None
+        self.signup_window = None
+
+    def open_login_window(self):
+        """Function to open the login window and ensure no other duplicates or
+        signup windows exist.
+        """
+        if self.login_window is not None and self.login_window.winfo_exists():
+            return
+        # Destroy signup window if open
+        if self.signup_window is not None and self.signup_window.winfo_exists():
+            self.signup_window.destroy()
+            self.signup_window = None
+
+        self.login_window = tk.Toplevel(self.master)
+        LoginWindow(self.login_window, self)
+
+    def open_signup_window(self):
+        """Function to open the signup window and ensure no other duplicates or
+        login windows exist."""
+        if self.signup_window is not None and self.signup_window.winfo_exists():
+            return
+        # Destroy login window if open
+        if self.login_window is not None and self.login_window.winfo_exists():
+            self.login_window.destroy()
+            self.login_window = None
+
+        self.signup_window = tk.Toplevel(self.master)
+        SignupWindow(self.signup_window, self)
+
+    def checkexit(self):
+        """Function to confirm user wants to exit application."""
+        response = mb.askquestion("Exit Programme?", "Your "
+                                  + "progress will NOT be saved."
+                                  + "\nAre you sure you want to "
+                                  + "exit the program?",
+                                  icon='warning')
+        if response == "yes":
+            self.master.destroy()
+
+
+class LoginWindow:
+    """Class to log the user into the program by matching account credentials."""
+
+    def __init__(self, master, app):
+        """Function to initialise window."""
+        def login():
+            """Function to validate user input and login user."""
+
+            username = username_var.get()
+            password = password_var.get()
+
+            if username and password:
+                if os.path.exists(f"{username}_info.txt"):
+                    # Check for password.
+                    with open(f"{username}_info.txt", "r") as file:
+                        lines = file.read().splitlines()
+                        words = (lines[4]).split()
+                        stored_password = (words[1]).strip()
+
+                        if password == stored_password:
+
+                            # Create dictionary of user info for later access.
+                            user_info = {
+                                "Username": username,
+                                "First name": ((lines[2]).split())[2].strip(),
+                                "Last name": ((lines[3]).split())[2].strip(),
+                                "Birthdate": ((lines[5]).split())[1].strip()
+                            }
+
+                            mb.showinfo("Successful", "Log in successful." +
+                                        f"\nWelcome back {username}", parent=self.master)
+                            self.master.destroy()
+                            self.master.master.withdraw()
+                            NewWindow(tk.Toplevel(), user_info)
+                        else:
+                            mb.showerror(
+                                "Invalid input", "Incorrect password. Please enter a valid password or signup.", parent=self.master)
+                else:
+                    mb.showerror(
+                        "Invalid input", "Incorrect username. Please enter a valid username or signup.", parent=self.master)
+            else:
+                mb.showerror("Invalid input", "There are missing " +
+                             "fields.\nPlease enter all fields.", parent=self.master)
+
+        self.master = master
+        self.master.attributes('-topmost', True)
+        master.title("Login")
+        screen_width = master.winfo_screenwidth()
+        screen_height = master.winfo_screenheight()
+        x_pos = (screen_width - ENTRY_WIDTH + X_OFFSET) // 2
+        y_pos = (screen_height - ENTRY_HEIGHT + Y_OFFSET) // 2
+        master.geometry(f"{ENTRY_WIDTH}x{ENTRY_HEIGHT}+{x_pos}+{y_pos}")
+        master.resizable(False, False)
+        master.configure(background=BG_COLOUR)
+        self.app = app
+
+        canvas = tk.Canvas(master,
+                           height=70,
+                           width=350,
+                           bg="black")
+
+        # Create labels/buttons for title and user navigation.
+        login_lbl = tk.Label(master, text="Log in:", font=("Helvetica", 16),
+                             fg="white", bg="black")
+        title_lbl = tk.Label(master, text="Log into your account",
+                             font=STANDARD_FONT, fg="white", bg="black")
+        signup_btn = tk.Button(master, text="Sign up", width=11,
+                               height=2, font=STANDARD_FONT, command=self.switch_to_signup)
+        login_btn = tk.Button(master, text="Log in", font=STANDARD_FONT,
+                              width=11, height=2, fg="black", bg="gold", command=login)
+
+        # Declaring name and password as string variables.
+        username_var = tk.StringVar()
+        password_var = tk.StringVar()
+
+        # Create labels and entries for username and password.
+        username_lbl = tk.Label(master,
+                                text="Username:",
+                                font=STANDARD_FONT,
+                                bg=BG_COLOUR)
+        username_entry = tk.Entry(master,
+                                  textvariable=username_var)
+        password_lbl = tk.Label(master,
+                                text="Password:",
+                                font=STANDARD_FONT,
+                                bg=BG_COLOUR)
+        password_entry = tk.Entry(master,
+                                  textvariable=password_var,
+                                  show="*")
+
+        # Place labels and entries.
+        login_lbl.place(x=10, y=24)
+        title_lbl.place(x=78, y=30)
+        signup_btn.place(x=240, y=15)
+        username_lbl.place(x=40, y=200)
+        username_entry.place(x=120, y=200)
+        password_lbl.place(x=40, y=240)
+        password_entry.place(x=120, y=240)
+        canvas.place(x=0, y=0)
+        login_btn.place(x=120, y=400)
+
+        # When the login window is closed manually.
+        master.protocol("WM_DELETE_WINDOW", self.on_close)
+
+    def switch_to_signup(self):
+        """Function to close current window and open signup window."""
+        self.master.destroy()
+        self.app.login_window = None
+        self.app.open_signup_window()
+
+    def on_close(self):
+        """Function to close this window."""
+        self.app.login_window = None
+        self.master.destroy()
+
+
+class SignupWindow:
+    """Function to sign the user in. Includes validation and writing to a file."""
+
+    def __init__(self, master, app):
+        """Initialise the signup window."""
+        def signup():
+            """Function to validate user input when signing up."""
+            first_name = first_name_var.get()
+            last_name = last_name_var.get()
+            username = username_var.get()
+            password = password_var.get()
+            confirm_password = confirm_password_var.get()
+            birthdate = birthdate_var.get()
+            age = None  # Initialise the value.
+
+            # Validate the user input if all fields are entered.
+            if first_name and last_name and username and password and \
+                    confirm_password and birthdate:
+                if not first_name.isalpha() or not last_name.isalpha():
+                    mb.showerror("Invalid first name/last " +
+                                 "name", "Please only enter letters " +
+                                 "for first name and last name.", parent=self.master)
+                elif not username.isalnum():
+                    mb.showerror("Invalid username", "Please only " +
+                                 "enter numbers or letters for username.", parent=self.master)
+                elif os.path.exists(f"{username}_info.txt"):
+                    mb.showerror("Invalid username", "This username " +
+                                 "already exists.\nPlease enter a " +
+                                 "different username.", parent=self.master)
+                elif password != confirm_password:
+                    mb.showerror("Invalid password", "Please check " +
+                                 "that your passwords match.", parent=self.master)
+                elif birthdate:
+                    # Validate the birthdate entry.
+                    try:
+                        # Convert the string to a datetime object.
+                        birthdate = datetime.strptime(birthdate, '%d/%m/%Y')
+                        today = date.today()
+                        difference = today.year - birthdate.year
+                        # Find out if today preceeds the date of birth this year.
+                        today_precedes_dob = (today.month, today.day) < \
+                            (birthdate.month, birthdate.day)
+                        age = difference - today_precedes_dob
+                        if age <= 0 or age >= 99:
+                            mb.showerror("Invalid input", "Please enter a valid "
+                                         "birthdate (dd/mm/yyyy)", parent=self.master)
+                            return
+                        elif age < 15 or age > 24:
+                            age_maybe = mb.askquestion("Note", "Please note that "
+                                                       "this application is "
+                                                       "primarily designed for "
+                                                       "ages 15-24, and may not "
+                                                       "meet your individual "
+                                                       "needs.\n\nAre you sure "
+                                                       "you want to continue?", parent=self.master)
+                            if age_maybe == "no":
+                                return False
+                        else:
+                            mb.showinfo("Note", "Please enjoy this applications "
+                                                "features and resources which are "
+                                                "tailored specifically for ages 15-24 "
+                                                "like yourself.", parent=self.master)
+                    except ValueError:
+                        # Show an error if the date format is incorrect.
+                        mb.showerror("Invalid input", "Please enter a valid "
+                                     "birthdate (dd/mm/yyyy)", parent=self.master)
+                        return
+
+                    # Create an individual file for the user.
+                    with open(f"{username}_info.txt", "a") as file:
+                        file.write(f"\nUsername: {username}\n"
+                                   f"First name: {first_name}\n"
+                                   f"Last name: {last_name}\n"
+                                   f"Password: {password}\n"
+                                   f"Birthdate: {birthdate.strftime('%d/%m/%Y')}")
+
+                    # Debugging statment.
+                    print(f"Age: {age}")
+
+                    # Create a dictionary of user info.
+                    user_info = {
+                        "Username": username,
+                        "First name": first_name,
+                        "Last name": last_name,
+                        "Birthdate": birthdate.strftime('%d/%m/%Y')
+                    }
+
+                    mb.showinfo("Successful", "Sign up successful." +
+                                f"\nWelcome {username}", parent=self.master)
+                    self.master.destroy()
+                    self.master.master.withdraw()
+                    NewWindow(tk.Toplevel(), user_info)
+
+            else:
+                mb.showerror("Invalid input",
+                             "Please enter all fields", parent=self.master)
+
+        self.master = master
+        self.master.attributes('-topmost', True)
+        master.title("Signup")
+        screen_width = master.winfo_screenwidth()
+        screen_height = master.winfo_screenheight()
+        x_pos = (screen_width - ENTRY_WIDTH + X_OFFSET) // 2
+        y_pos = (screen_height - ENTRY_HEIGHT + Y_OFFSET) // 2
+        master.geometry(f"{ENTRY_WIDTH}x{ENTRY_HEIGHT}+{x_pos}+{y_pos}")
+        master.resizable(False, False)
+        master.configure(background=BG_COLOUR)
+        self.app = app
+
+        # Print today's date, neccassary for calculating the users age.
+        today = date.today()
+        d = today.strftime("%d/%m/%y")
+        print(f"Date: {d}")
+
+        canvas = tk.Canvas(master,
+                           height=70,
+                           width=350,
+                           bg="black")
+
+        # Create labels/buttons for title and user navigation.
+        signup_lbl = tk.Label(master, text="Sign up:", font=("Helvetica", 16),
+                              fg="white", bg="black")
+        title_lbl = tk.Label(master, text="Create an account",
+                             font=STANDARD_FONT, fg="white", bg="black")
+        login_btn = tk.Button(master, text="Log in", width=11,
+                              height=2, font=STANDARD_FONT, command=self.switch_to_login)
+        signup_btn = tk.Button(master, text="Sign up", font=STANDARD_FONT, width=11,
+                               height=2, fg="black", bg="gold", command=signup)
+
+        # Place labels/buttons.
+        signup_lbl.place(x=10, y=24)
+        title_lbl.place(x=85, y=30)
+        login_btn.place(x=240, y=15)
+        signup_btn.place(x=120, y=400)
+
+        # Declaring name and password as string variables.
+        first_name_var = tk.StringVar()
+        last_name_var = tk.StringVar()
+        username_var = tk.StringVar()
+        password_var = tk.StringVar()
+        confirm_password_var = tk.StringVar()
+        birthdate_var = tk.StringVar()
+
+        fields = [
+            ("First name:", first_name_var, False),
+            ("Last name:", last_name_var, False),
+            ("Username:", username_var, False),
+            ("Password:", password_var, True),
+            ("Confirm \nPassword:", confirm_password_var, True),
+            ("Birthdate \n(dd/mm/yyyy):", birthdate_var, False),
+        ]
+
+        labels = []
+        entries = []
+
+        # Starting coordinates and spacing between fields.
+        start_y = 100
+        y_step = 45
+        label_x = 20
+        entry_x = 120
+
+        # Use iteration to create labels and entries.
+        for i, (label_text, var, is_password) in enumerate(fields):
+            y = start_y + i * y_step
+
+            # Create and place labels.
+            lbl = tk.Label(master, text=label_text,
+                           font=STANDARD_FONT, bg=BG_COLOUR)
+            lbl.place(x=label_x, y=y)
+            labels.append(lbl)
+            # Create and place entries.
+            entry = tk.Entry(master, textvariable=var,
+                             show="*" if is_password else "")
+            entry.place(x=entry_x, y=y)
+            entries.append(entry)
+
+        canvas.place(x=0, y=0)
+
+        # When the signup window is closed manually
+        master.protocol("WM_DELETE_WINDOW", self.on_close)
+
+    def switch_to_login(self):
+        """Function to close this window and open new login window."""
+        self.master.destroy()
+        self.app.signup_window = None
+        self.app.open_login_window()
+
+    def on_close(self):
+        """Function to close this window."""
+        self.app.signup_window = None
+        self.master.destroy()
+
+
+class NewWindow:
+    """Class that displays a new window which stores all the pages the use can browse."""
+
+    def __init__(self, master, user_info):
+        """Function to initialise the attributes of the object."""
+        self.master = master
+        master.title("New Window")
+        # Set window geometry.
+        screen_width = master.winfo_screenwidth()
+        screen_height = master.winfo_screenheight()
+        x_pos = (screen_width - MAIN_WIDTH + X_OFFSET) // 2
+        y_pos = (screen_height - MAIN_HEIGHT + Y_OFFSET) // 2
+        master.geometry(f"{MAIN_WIDTH}x{MAIN_HEIGHT}+{x_pos}+{y_pos}")
+        master.resizable(False, False)
+        master.configure(background=BG_COLOUR)
+
+        # Save user_info to this class.
+        self.user_info = user_info
+
+        # Create a coloured box for the top where navigation bar will be.
+        canvas = tk.Canvas(master,
+                           height=70,
+                           width=1210,
+                           bg="black")
+        canvas.place(x=0, y=0)
+
+        # Buttons to switch between frames.
+        nav_buttons = [
+            ("Home", "HomePage"),
+            ("About", "AboutPage"),
+            ("Quiz", "QuizPage"),
+            ("Test", "TestPage"),
+            ("Help", "HelpPage"),
+            ("Profile", "ProfilePage")
+        ]
+
+        # Create exit button and place it.
+        self.exit_btn = tk.Button(master, text="Exit", width=11, height=2,
+                                  font=STANDARD_FONT, command=self.checkexit)
+        self.exit_btn.place(x=1080, y=15)
+
+        # Iterate through the list to create and place buttons.
+        for i, (label, frame_name) in enumerate(nav_buttons):
+            btn = tk.Button(master, text=label, command=lambda f=frame_name: self.show_frame(f), width=11, height=2,
+                            font=STANDARD_FONT)
+            btn.place(x=50+i*115, y=15)
+
+        # Container to hold all content frames
+        container = tk.Frame(master, width=700, height=800)
+        container.place(x=0, y=70, width=1200, height=630)
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+        self.container = container
+
+        self.frames = {}
+
+        for F in (HomePage, AboutPage, QuizPage, TestPage, ProfilePage, HelpPage):
+            page_name = F.__name__
+            # Pass user_info to profile page.
+            if page_name == "ProfilePage" or page_name == "QuizPage" or page_name == "TestPage":
+                frame = F(master=container, controller=self,
+                          user_info=self.user_info, new_window=self.master)
+            else:
+                frame = F(master=container, controller=self)
+
+            self.frames[page_name] = frame
+            frame.configure(bg=BG_COLOUR)
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_frame("HomePage")
+
+    def show_frame(self, page_name):
+        """Show frame based on users choice."""
+        frame = self.frames[page_name]
+        frame.tkraise()
+
+    def checkexit(self):
+        """Function to confirm user wants to exit application."""
+        response = mb.askquestion("Exit Programme?", "Are you sure you want to "
+                                  + "exit the program?",
+                                  icon='warning', parent=self.master)
+        if response == "yes":
+            self.master.destroy()
+
+
+class HomePage(tk.Frame):
+    """Class to display program title."""
+
+    def __init__(self, master, controller):
+        """Function to initialise the attributes of the object."""
+        super().__init__(master)
+
+        # Display labels for title and substitle.
+        program_title = tk.Label(self,
+                                 text="KiwiDrive",
+                                 font=("Helvetica", 100, "bold"),
+                                 fg="gold",
+                                 bg=BG_COLOUR)
+        program_title.place(x=100, y=200)
+
+        sub_title = tk.Label(self,
+                             text="Learn. Quiz. Test.",
+                             font=("Helvetica", 20),
+                             bg=BG_COLOUR)
+        sub_title.place(x=100, y=370)
+
+        # Create image.
+        image = Image.open("yellow_road_image.png")
+        resize_image = image.resize((400, 400))
+        img = ImageTk.PhotoImage(resize_image)
+        road_image = tk.Label(self, image=img, bd=0, highlightthickness=0)
+        road_image.image = img
+        road_image.place(x=750, y=160)
+
+        # Create dots for the letter I. To look like a traffic light.
+        dots = [(193, 'red'), (335, 'goldenrod1'), (522, 'green')]
+        for x, color in dots:
+            canvas = tk.Canvas(self, width=50, height=50,
+                               bg=BG_COLOUR, bd=0, highlightthickness=0)
+            canvas.place(x=x, y=202)
+            canvas.create_oval(15, 15, 35, 35, fill=color, outline='')
+
+
+class AboutPage(tk.Frame):
+    """Class to inform the user of the program and its purpose."""
+
+    def __init__(self, master, controller):
+        """Function to initialise the attributes of the object."""
+        super().__init__(master)
+
+        about_title = tk.Label(
+            self, text="About", font=PAGE_TITLE_FONT, bg=BG_COLOUR)
+        about_title.place(x=50, y=50)
+
+        with open("page_context.txt", "r") as file:
+            about_content = file.readlines()[1:22]
+
+        about_lbl = tk.Label(self, text=("".join(about_content)),
+                             justify=tk.LEFT, bg=BG_COLOUR, font=("Helvetica", 12))
+        about_lbl.place(x=50, y=150)
+
+        # Create image.
+        image = Image.open("about_page_img.jpg")
+        img = ImageTk.PhotoImage(image)
+        about_image = tk.Label(self, image=img, bd=0, highlightthickness=0)
+        about_image.image = img
+        about_image.place(x=650, y=180)
+
+
+class QuizPage(tk.Frame):
+    """Class to display the quiz frame."""
+
+    def __init__(self, master, controller=None, user_info=None, new_window=None):
+        """Function to initialise the attributes of the object."""
+        super().__init__(master)
+        quiz_title = tk.Label(
+            self, text="Quiz", font=PAGE_TITLE_FONT, bg=BG_COLOUR)
+        quiz_title.place(x=50, y=50)
+
+        self.new_window = new_window
+        self.controller = controller
+        self.user_info = user_info or {}
+
+        # Get quiz content from file.
+        with open("page_context.txt", "r") as file:
+            quiz_content = file.readlines()[24:37]
+
+        intro_lbl = tk.Label(self,
+                             text=("".join(quiz_content)),
+                             bg=BG_COLOUR,
+                             justify="left",
+                             font=("Helvetica", 12))
+        intro_lbl.place(x=50, y=150)
+
+        # Create buttons for different quiz options.
+        theory_btn = tk.Button(self, text="Theory", font=(
+            "Helvetica", 12, "bold"), width=10, bg="gold", command=lambda: self.choose_quiz('theory_quiz.json'))
+        behaviour_btn = tk.Button(self, text="Behaviour", font=(
+            "Helvetica", 12, "bold"), width=10, bg="gold", command=lambda: self.choose_quiz('behaviour_quiz.json'))
+        emergency_btn = tk.Button(self, text="Emergency", font=(
+            "Helvetica", 12, "bold"), width=10, bg="gold", command=lambda: self.choose_quiz('emergency_quiz.json'))
+
+        # Place buttons.
+        theory_btn.place(x=700, y=200)
+        behaviour_btn.place(x=700, y=400)
+        emergency_btn.place(x=900, y=200)
+
+    def choose_quiz(self, quiz_name):
+        """Function to choose the quiz which will be referenced in quiz class."""
+        self.chosen_quiz = quiz_name
+        self.open_quiz(self.chosen_quiz, self.user_info)
+
+    def open_quiz(self, chosen_quiz, user_info):
+        """Function to open the chosen quiz and assign its contents to questions, 
+        options, and answers.
+        """
+        # Get the data from the json file.
+        with open(chosen_quiz) as f:
+            data = json.load(f)
+
+        # Set the question, options, and answer.
+        self.question = data['question']
+        self.options = data['options']
+        self.answer = data['answer']
+        self.feedback = data['feedback']
+
+        # Create the top level quiz window.
+        Quiz(self.master, (self.question, self.options,
+             self.answer, self.feedback), chosen_quiz, user_info)
+
+    def get_quiz_data(self):
+        """Function to get the quiz data for generation."""
+        return self.question, self.options, self.answer, self.feedback
+
+
+class Quiz(tk.Toplevel):
+    """Class to define the components of the self."""
+
+    def __init__(self, master, quiz_data, chosen_quiz, user_info):
+        super().__init__(master)
+        """Function called when new object of class is intitialised. Set 
+        question count to 0 and initilise all other functions for content."""
+        # Extract quiz name from file path of chosen quiz.
+        quiz_name = (chosen_quiz.split("_quiz.json")[0]).capitalize()
+        self.title(f"{quiz_name} quiz")
+        # Set window geometry.
+        screen_width = master.winfo_screenwidth()
+        screen_height = master.winfo_screenheight()
+        x_pos = (screen_width - QNT_WIDTH + X_OFFSET) // 2
+        y_pos = (screen_height - QNT_HEIGHT + Y_OFFSET) // 2
+        self.geometry(f"{QNT_WIDTH}x{QNT_HEIGHT}+{x_pos}+{y_pos}")
+        self.resizable(False, False)
+        # Ensure only top level window is interactable.
+        Quiz.grab_set(self)
+
+        # Saving external variables to this class to use across functions.
+        self.question, self.options, self.answer, self.feedback = quiz_data
+        self.user_info = user_info
+        self.quiz_name = quiz_name
+
+        # Set question number to 0.
+        self.q_no = 0
+        # Hold an integer value to select an option in a question.
+        self.opt_selected = tk.IntVar(self, value=0)
+        # Set options to zero.
+        self.opt_selected.set(0)
+        # Use radio button to display current question and display options.
+        self.opts = self.radio_buttons()
+        # Display current question options, buttons, title, and display questions.
+        title = tk.Label(self, text=f"{quiz_name} quiz",
+                         width=50, bg="black", fg="white", font=("Helvetica", 20, "bold"))
+        title.place(x=0, y=2)
+        # Create a label for answer indication. Will be used in next_btn().
+        self.answer_lbl = tk.Label(
+            self, text="", font=("Helvetica", 20, "bold"))
+        self.answer_lbl.place(x=520, y=380)
+
+        # Display buttons and tk.Labels.
+        next_button = tk.Button(self, text="Next", command=self.next_btn,
+                                width=10, bg="gold", font=("Helvetica", 16, "bold"))
+        self.exit_btn = tk.Button(self, text="Exit", command=self.checkexit,
+                                  width=5, bg="black", fg="white", font=("Helvetica", 16, " bold"))
+        self.q_no_label = tk.Label(self, text="", width=60,
+                                   font=('Helvetica', 16, 'bold'),
+                                   anchor='w', justify=tk.LEFT)
+
+        # Function.
+        self.display_options(self.options, self.q_no)
+        self.display_question(self.question)
+
+        # Place buttons/labels.
+        next_button.place(x=350, y=400)
+        self.exit_btn.place(x=700, y=50)
+        self.q_no_label.place(x=70, y=80)
+
+        # Ensure the button stays on top of the question label.
+        self.exit_btn.lift()
+
+        # No of questions.
+        self.data_size = len(self.question)
+
+        # keep a counter of correct answers.
+        self.correct = 0
+
+    def display_result(self, user_info):
+        """Function to calculate, display, and save user results."""
+        # Calculate how many questions user answered incorrectly.
+        wrong_count = self.data_size - self.correct
+        correct = f"Correct: {self.correct}"
+        wrong = f"Wrong: {wrong_count}"
+
+        # Calculates the percentage of correct answers.
+        score = int(self.correct / self.data_size * 100)
+        result = f"Score: {score}%"
+
+        mb.showinfo("Quiz complete!\nResult",
+                    f"{result}\n{correct}\n{wrong}", parent=self)
+
+        # Save users results to their file.
+        today = datetime.today()
+        formatted_date = today.strftime("%d/%m/%Y %H:%M")
+        quiz_results = (
+            f"\n{self.quiz_name} quiz results ({formatted_date}):\n"
+            f"{result}\n"
+            f"{correct}\n"
+            f"{wrong}"
+        )
+
+        # Get username.
+        username = user_info.get('Username', '')
+        with open(f"{username}_info.txt", "a") as file:
+            file.write(f"\n{quiz_results}\n")
+
+    def check_ans(self, q_no, answer):
+        """Function to check the answer after user has clicked next."""
+        # Check if selected option is correct.
+        if self.opt_selected.get() == answer[q_no]:
+            return self.opt_selected.get() == answer[q_no]
+
+    def display_options(self, options, q_no):
+        """Function to reset question options for next question."""
+        val = 0
+        # Deselect options.
+        self.opt_selected.set(0)
+        # Ensure the question label doesn't cover the button.
+        self.exit_btn.lift()
+
+        # Loop over options to display for radio button text.
+        for option in options[q_no]:
+            self.opts[val]['text'] = option
+            val += 1
+
+    def display_question(self, question):
+        """Function to update the question label."""
+        self.q_no_label.config(text=question[self.q_no])
+
+    def next_btn(self):
+        """Function to check if the answer is correct, then increase question count by 1."""
+
+        if self.opt_selected.get() >= 1:
+            if self.check_ans(self.q_no, self.answer):
+                self.correct += 1
+                self.answer_lbl.config(text="Correct!", fg="green")
+
+            else:
+                self.answer_lbl.config(text="Incorrect", fg="red")
+                self.display_feedback(self.feedback)
+
+            # Moves to next Question.
+            self.q_no += 1
+
+            # Checks if the q_no size is equal to the data size.
+            if self.q_no == self.data_size:
+
+                # If it is correct then it displays the score.
+                self.display_result(self.user_info)
+                # Destroys the self.
+                self.destroy()
+            else:
+                # Shows the next question.
+                self.display_question(self.question)
+                self.display_options(self.options, self.q_no)
+                # Clear answer indication.
+                self.after(700, lambda: self.answer_lbl.config(text=""))
+        else:
+            mb.showerror("Invalid input",
+                         "Please select an option.", parent=self)
+
+    def display_feedback(self, feedback):
+        """Function to display feedback when user answers incorrectly."""
+        feedback_txt = feedback[self.q_no]
+        mb.showinfo("Feedback", feedback_txt, parent=self)
+
+    def radio_buttons(self):
+        """Function to display radiobuttons that are associated with options the user can select."""
+        # Initialize the list with an empty list of options and position first option.
+        q_list = []
+        y_pos = RADIO_Y_START
+
+        # Adding the options to the list.
+        while len(q_list) < NUM_RADIOBUTTONS:
+
+            # Aetting the radio button properties
+            radio_btn = tk.Radiobutton(self, text="", variable=self.opt_selected,
+                                       value=len(q_list)+1, font=("Helvetica", 14), justify=tk.LEFT)
+
+            # Add button to the list then place it.
+            q_list.append(radio_btn)
+            radio_btn.place(x=RADIO_X_POSITION, y=y_pos)
+
+            # Incrementing the y-axis position by 40.
+            y_pos += RADIO_Y_SPACING
+
+        # Return the radio buttons.
+        return q_list
+
+    def checkexit(self):
+        """Function to confirm user wants to exit quiz."""
+        response = mb.askquestion("Exit Quiz?", "Your "
+                                  + "progress will NOT be saved."
+                                  + "\nAre you sure you want to "
+                                  + "exit the quiz?",
+                                  icon='warning', parent=self)
+        if response == "yes":
+            self.destroy()
+
+
+class TestPage(tk.Frame):
+    """Function to display the test frame, including a short introducation and buttons."""
+
+    def __init__(self, master, controller=None, user_info=None, new_window=None):
+        """Function to initialise attributes of the object."""
+        super().__init__(master)
+        test_title = tk.Label(
+            self, text="Test", font=PAGE_TITLE_FONT, bg=BG_COLOUR)
+        test_title.place(x=50, y=50)
+
+        self.new_window = new_window
+        self.controller = controller
+        self.user_info = user_info or {}
+
+        # Get test content from file.
+        with open("page_context.txt", "r") as file:
+            test_content = file.readlines()[39:54]
+
+        intro_lbl = tk.Label(self,
+                             text=("".join(test_content)),
+                             bg=BG_COLOUR,
+                             justify="left",
+                             font=("Helvetica", 12))
+        intro_lbl.place(x=50, y=150)
+
+        # Create buttons for different quiz options.
+        test_btn = tk.Button(self, text="Start now", font=("Helvetica", 12, "bold"), width=10,
+                             bg="gold", command=lambda: self.open_test('test.json', self.user_info))
+
+        # Place buttons.
+        test_btn.place(x=700, y=200)
+
+        # Create kiwi image.
+        image = Image.open("running_kiwi_img.png")
+        resize_image = image.resize((150, 150))
+        img = ImageTk.PhotoImage(resize_image)
+        kiwi_image = tk.Label(self, image=img, bd=0, highlightthickness=0)
+        kiwi_image.image = img
+        kiwi_image.place(x=1000, y=500)
+
+    def open_test(self, test, user_info):
+        """Function to open test and retrieve data from json file."""
+        with open(test) as f:
+            data = json.load(f)
+
+        # Set the question, options, and answer.
+        self.question = data['question']
+        self.options = data['options']
+        self.answer = data['answer']
+
+        # Create the top level quiz window.
+        Test(self.master, (self.question, self.options, self.answer), user_info)
+
+    def get_test_data(self):
+        """Function to get the quiz data for generation."""
+        return self.question, self.options, self.answer
+
+
+class Test(tk.Toplevel):
+    """Class to define the components of the self."""
+
+    def __init__(self, master, test_data, user_info):
+        super().__init__(master)
+        """Function called when new object of class is intitialised. Set 
+        question count to 0 and initilise all other functions for content."""
+        self.title("Test")
+        # Set window geometry.
+        screen_width = master.winfo_screenwidth()
+        screen_height = master.winfo_screenheight()
+        x_pos = (screen_width - QNT_WIDTH + X_OFFSET) // 2
+        y_pos = (screen_height - QNT_HEIGHT + Y_OFFSET) // 2
+        self.geometry(f"{QNT_WIDTH}x{QNT_HEIGHT}+{x_pos}+{y_pos}")
+        # Ensure only top level window is interactable.
+        Test.grab_set(self)
+
+        # Saving external variables to this class to use across functions.
+        self.question, self.options, self.answer = test_data
+        self.user_info = user_info
+
+        # set question number to 0.
+        self.q_no = 0
+        # Hold an integer value to select an option in a question.
+        self.opt_selected = tk.IntVar(self, value=0)
+        # Set options to zero.
+        self.opt_selected.set(0)
+        # Use radio button to display current question and display options.
+        self.opts = self.radio_buttons()
+        # display current question options, buttons, title, and display questions.
+        title = tk.Label(self, text="Test", width=50, bg="black",
+                         fg="white", font=("Helvetica", 20, "bold"))
+        title.place(x=0, y=2)
+
+        # Display buttons.
+        next_button = tk.Button(self, text="Next", command=self.next_btn,
+                                width=10, bg="gold", font=("Helvetica", 16, "bold"))
+        self.exit_btn = tk.Button(self, text="Exit", command=self.checkexit,
+                                  width=5, bg="black", fg="white", font=("Helvetica", 16, " bold"))
+        self.q_no_label = tk.Label(self, text="", width=60,
+                                   font=('Helvetica', 16, 'bold'),
+                                   anchor='w', justify=tk.LEFT)
+
+        # Function.
+        self.display_options(self.options)
+        self.display_question(self.question)
+
+        # Place buttons/labels.
+        next_button.place(x=350, y=400)
+        self.exit_btn.place(x=700, y=50)
+        self.q_no_label.place(x=70, y=80)
+        # Ensure the question label doesn't cover the button.
+        self.exit_btn.lift()
+
+        # no of questions
+        self.data_size = len(self.question)
+
+        # keep a counter of correct answers
+        self.correct = 0
+
+    def display_result(self, user_info):
+        """Function to calculate, display, and save user results."""
+        # Calculate how many questions user answered incorrectly.
+        wrong_count = self.data_size - self.correct
+        correct = f"Correct: {self.correct}"
+        wrong = f"Wrong: {wrong_count}"
+
+        # calcultaes the percentage of correct answers.
+        score = int(self.correct / self.data_size * 100)
+        result = f"Score: {score}%"
+
+        mb.showinfo("Test complete!\nResult",
+                    f"{result}\n{correct}\n{wrong}", parent=self)
+
+        # Save users results to their file.
+        today = datetime.today()
+        formatted_date = today.strftime("%d/%m/%Y %H:%M")
+        test_results = (
+            f"\nTest results ({formatted_date}):\n"
+            f"{result}\n"
+            f"{correct}\n"
+            f"{wrong}"
+        )
+
+        # Get username.
+        username = user_info.get('Username', '')
+        with open(f"{username}_info.txt", "a") as file:
+            file.write(f"\n{test_results}\n")
+
+    def check_ans(self, q_no, answer):
+        """Function to check the answer after user has clicked next."""
+        # Check if selected option is correct.
+        if self.opt_selected.get() == answer[q_no]:
+            return self.opt_selected.get() == answer[q_no]
+
+    def display_options(self, options):
+        """Function to reset question options for next question."""
+        val = 0
+        # Deselect options.
+        self.opt_selected.set(0)
+        # Ensure the question label doesn't cover the button.
+        self.exit_btn.lift()
+
+        # Loop over options to display for radio button text.
+        for option in options[self.q_no]:
+            self.opts[val]['text'] = option
+            val += 1
+
+    def display_question(self, question):
+        """Function to update the question label."""
+        self.q_no_label.config(text=question[self.q_no])
+
+    def next_btn(self):
+        """Function to check if the answer is correct, then increase question count by 1."""
+
+        if self.opt_selected.get() >= 1:
+            # Check if the answer is correct, then increment correct by 1.
+            if self.check_ans(self.q_no, self.answer):
+                self.correct += 1
+
+            # Moves to next Question by incrementing the q_no counter
+            self.q_no += 1
+
+            # checks if the q_no size is equal to the data size
+            if self.q_no == self.data_size:
+
+                # if it is correct then it displays the score
+                self.display_result(self.user_info)
+                # destroys the self
+                self.destroy()
+            else:
+                # shows the next question
+                self.display_question(self.question)
+                self.display_options(self.options)
+        else:
+            mb.showerror("Invalid input",
+                         "Please select an option.", parent=self)
+
+    def radio_buttons(self):
+        """Function to display radiobuttons that are associated with options the user can select."""
+        # Initialize the list with an empty list of options and position first option.
+        q_list = []
+        y_pos = RADIO_Y_START
+
+        # Adding the options to the list.
+        while len(q_list) < NUM_RADIOBUTTONS:
+
+            # Aetting the radio button properties
+            radio_btn = tk.Radiobutton(self, text="", variable=self.opt_selected,
+                                       value=len(q_list)+1, font=("Helvetica", 14), justify=tk.LEFT)
+
+            # Add button to the list then place it.
+            q_list.append(radio_btn)
+            radio_btn.place(x=RADIO_X_POSITION, y=y_pos)
+
+            # Incrementing the y-axis position by 40.
+            y_pos += RADIO_Y_SPACING
+
+        # Return the radio buttons.
+        return q_list
+
+    def checkexit(self):
+        """Function to confirm user wants to exit quiz."""
+        response = mb.askquestion("Exit Test?", "Your "
+                                  + "progress will NOT be saved."
+                                  + "\nAre you sure you want to "
+                                  + "exit the test?",
+                                  icon='warning', parent=self)
+        if response == "yes":
+            self.destroy()
+
+
+class HelpPage(tk.Frame):
+    """Class to display usermanual."""
+
+    def __init__(self, master, controller):
+        super().__init__(master)
+
+        help_title = tk.Label(
+            self, text="Help", font=PAGE_TITLE_FONT, bg=BG_COLOUR)
+        help_title.place(x=50, y=50)
+
+        help_file = open("user_manual.txt", "r")
+        user_manual = help_file.read()
+
+        self.display_scrollbar()
+        self.text_widget.insert(tk.END, user_manual)
+        # Ensure the user cannot edit text widget.
+        self.text_widget.config(state=tk.DISABLED, font=("Helvetica", 12))
+
+    def display_scrollbar(self):
+        """Function to display scrollbar widget."""
+        # Create a frame for the scrollbar.
+        container = tk.Frame(self)
+        container.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
+
+        # Create a vertical scrollbar within the container.
+        v = tk.Scrollbar(container)
+        v.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # Create text widget.
+        self.text_widget = tk.Text(container, width=120,
+                                   height=25, wrap=tk.NONE, yscrollcommand=v.set)
+
+        self.text_widget.pack()
+        v.config(command=self.text_widget.yview)
+
+
+class ProfilePage(tk.Frame):
+    """Class to display profile information relevant to the user."""
+
+    def __init__(self, master, controller=None, user_info=None, new_window=None):
+        """Function to initilaise class."""
+
+        def signout():
+            """Function to sign the user out and redirect them to the first 
+            window.
+            """
+            response = mb.askquestion("Signout?", "Are you sure you want "
+                                      "to signout?",
+                                      icon='warning', parent=self.master)
+            if response == "yes":
+                self.new_window.destroy()
+                self.new_window.master.deiconify()
+
+        super().__init__(master)
+        self.new_window = new_window
+        self.controller = controller
+        self.user_info = user_info or {}
+
+        profile_title = tk.Label(self, text="Profile",
+                                 font=PAGE_TITLE_FONT, bg=BG_COLOUR)
+        profile_title.place(x=50, y=50)
+
+        self.display_scrollbar()
+        self.get_user_results(self.user_info)
+
+        username_lbl = tk.Label(self, text=f"Username: {user_info.get('Username', '')}", font=(
+            "Helvetica", 12), bg=BG_COLOUR)
+        firstname_lbl = tk.Label(self, text=f"First name: {user_info.get('First name', '')}", font=(
+            "Helvetica", 12), bg=BG_COLOUR)
+        lastname_lbl = tk.Label(self, text=f"Last name: {user_info.get('Last name', '')}", font=(
+            "Helvetica", 12), bg=BG_COLOUR)
+        birthdate_lbl = tk.Label(self, text=f"Birthdate: {user_info.get('Birthdate', '')}", font=(
+            "Helvetica", 12), bg=BG_COLOUR)
+
+        signout_btn = tk.Button(self,
+                                text="Signout",
+                                width=11,
+                                height=2,
+                                fg="black",
+                                bg="firebrick1",
+                                font=STANDARD_FONT,
+                                command=signout)
+        show_results_btn = tk.Button(self, text="Show/update results", font=(
+            "Helvetica", 12, "bold"), width=16, bg="gold", command=self.update_user_results)
+
+        # Place the labels.
+        username_lbl.place(x=50, y=200)
+        firstname_lbl.place(x=50, y=225)
+        lastname_lbl.place(x=50, y=250)
+        birthdate_lbl.place(x=50, y=275)
+        signout_btn.place(x=1080, y=550)
+        show_results_btn.place(x=290, y=160)
+
+    def get_user_results(self, user_info):
+        """Function to retrieve the users results from their file."""
+        # Get username.
+        username = user_info.get('Username', '')
+        results = []
+
+        with open(f"{username}_info.txt", "r") as file:
+            lines = file.read().splitlines(keepends=True)
+            for i, line in enumerate(lines):
+                if " results (" in line:
+                    block = lines[i:i+RESULTS_BLOCK_SIZE]
+                    results.extend(block)
+                    results.append("\n")
+
+        user_results = ''.join(
+            results) if results else "No quiz/test results found."
+        self.text_widget.insert(tk.END, user_results)
+        # Ensure the user cannot edit text widget.
+        self.text_widget.config(state=tk.DISABLED, font=("Helvetica", 12))
+
+    def update_user_results(self):
+        """Function to clear the display for current results and update it."""
+        self.text_widget.config(state=tk.NORMAL, font=("Helvetica", 12))
+        self.text_widget.delete("1.0", tk.END)
+        self.get_user_results(self.user_info)
+
+    def display_scrollbar(self):
+        """Function to display scrollbar widget in a frame."""
+        container = tk.Frame(self)
+        container.place(relx=0.4, rely=0.6, anchor=tk.CENTER)
+
+        # Create a vertical scrollbar within the container.
+        v = tk.Scrollbar(container)
+        v.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # Create text widget.
+        self.text_widget = tk.Text(container, width=40,
+                                   height=20, wrap=tk.NONE, yscrollcommand=v.set)
+
+        self.text_widget.pack()
+        v.config(command=self.text_widget.yview)
+
+
+if __name__ == "__main__":
+    self = tk.Tk()
+    app = MainWindow(self)
+    self.mainloop()

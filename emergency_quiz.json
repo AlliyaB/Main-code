@@ -71,43 +71,43 @@
       "Your vehicle is a temporary hazard, e.g. you've broken down \nor have a flat tyre",
       "You've parked on a broken yellow line to pick something up"
     ],
-    ["*Practicing skids on a quiet road",
+    ["Practicing skids on a quiet road",
       "Towing a trailer",
       "Driving defensively",
       "Not using your full beam headlights when driving in rural areas at night"
     ],
     ["Slow down and prepare to stop in case a vehicle exits the fire station",
-      "*Stop until the lights stop flashing",
+      "Stop until the lights stop flashing",
       "Slow down to 20km/h, then proceed if it is safe to do so",
       "Keep driving, you probably won't get in their way"
     ],
     ["An ambulance officer",
-      "*A police officer",
+      "A police officer",
       "A council officer",
       "A member of the public"
     ],
     ["Stop on the right so you can attract the attention of cars \ncoming towards you",
-      "*Turn your hazard lights on, slow down, and prepare to stop somewhere safe",
+      "Turn your hazard lights on, slow down, and prepare to stop somewhere safe",
       "Turn your hazard lights on, carry on driving slowly until \nyou reach your destination",
       "Carry on driving with your interior lights on"
     ],
     ["If it is travelling faster than you want to",
       "You don't need to let it past - you can speed up so you're not holding it up",
-      "*If its siren and/or red flashing lights are on",
+      "If its siren and/or red flashing lights are on",
       "At all times"
     ],
     ["The back of the vehicle will sway towards the side of the blowout",
       "The front of the vehicle will pull towards the side of the blowout",
       "The front of the vehicle will pull to the opposite side of the blowout",
-      "*The back of the vehicle will sway from side to side"
+      "The back of the vehicle will sway from side to side"
     ],
     ["Brake suddenly so you don't leave the road",
-      "*Look through the gap underneath the bonnet or out of the side window",
+      "Look through the gap underneath the bonnet or out of the side window",
       "Turn on your headlights and look out of the side window",
       "Turn on your hazard lights and continue driving until you reach your destination"
     ],
     ["Call the police or ambulance",
-      "*Stop and check to see if anyone is hurt",
+      "Stop and check to see if anyone is hurt",
       "Call a family member or friend",
       "Leave the scene to tell someone"
     ]
